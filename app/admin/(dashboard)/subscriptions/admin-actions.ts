@@ -1,0 +1,163 @@
+"use server"
+
+import { revalidatePath } from "next/cache"
+import { prisma } from "@/lib/prisma"
+import { subscriptionBoxes } from "@/lib/data"
+
+export async function adminUpdatePantryStatus(pantryId: string, status: "active" | "paused" | "cancelled") {
+  try {
+    const pantry = await prisma.pantry.update({
+      where: { id: pantryId },
+      data: { status },
+    })
+
+    await prisma.pantryHistory.create({
+      data: {
+        pantryId,
+        action: status === "active" ? "resumed" : status === "paused" ? "paused" : "cancelled",
+        notes: `Pantry Membership status changed to ${status} by admin.`,
+        changedBy: "admin",
+      },
+    })
+
+    revalidatePath("/admin/subscriptions")
+    revalidatePath("/account")
+    return { success: true }
+  } catch (error) {
+    console.error("Admin failed to update pantry status:", error)
+    return { success: false, error: "Failed to update pantry status." }
+  }
+}
+
+export async function adminTriggerPantryDispatch(pantryId: string, scheduleId: string) {
+  try {
+    // 1. Fetch pantry details along with items and address
+    const pantry = await prisma.pantry.findUnique({
+      where: { id: pantryId },
+      include: {
+        items: true,
+        user: true,
+        shippingAddress: true,
+      }
+    })
+
+    if (!pantry) {
+      return { success: false, error: "Pantry membership not found." }
+    }
+
+    // 2. Fetch the schedule
+    const schedule = await prisma.pantrySchedule.findUnique({
+      where: { id: scheduleId }
+    })
+
+    if (!schedule || schedule.status !== "pending") {
+      return { success: false, error: "Schedule is either already completed/skipped or missing." }
+    }
+
+    // 3. Compute pricing from active tier
+    const planObj = subscriptionBoxes.find(b => b.id === pantry.tier)
+    const price = planObj ? planObj.price : 899
+
+    // 4. Generate unique order number
+    const dateStr = new Date().toISOString().slice(0, 10).replace(/-/g, "")
+    const randomSuffix = Math.random().toString(36).substring(2, 6).toUpperCase()
+    const orderNumber = `PD-PANTRY-${dateStr}-${randomSuffix}`
+
+    // 5. Run as a safe transaction to generate Order and update Schedule
+    await prisma.$transaction(async (tx) => {
+      // Create shipping coordinates fallback
+      const shippingAddressObj = pantry.shippingAddress ? {
+        addressLine1: pantry.shippingAddress.addressLine1,
+        addressLine2: pantry.shippingAddress.addressLine2,
+        city: pantry.shippingAddress.city,
+        state: pantry.shippingAddress.state,
+        postalCode: pantry.shippingAddress.postalCode,
+        country: pantry.shippingAddress.country,
+      } : {
+        addressLine1: "Primary Address On Record",
+        addressLine2: null,
+        city: "Palampur",
+        state: "Himachal Pradesh",
+        postalCode: "176061",
+        country: "India",
+      }
+
+      // Create new Dispatch Order
+      const newOrder = await tx.order.create({
+        data: {
+          orderNumber,
+          userId: pantry.userId,
+          customerName: pantry.user.fullName || "Community Member",
+          customerEmail: pantry.user.email,
+          customerPhone: pantry.user.image, // fallbacks
+          shippingAddress: shippingAddressObj as any,
+          billingAddress: shippingAddressObj as any,
+          status: "processing",
+          subtotal: price,
+          shippingFee: 0,
+          discount: 0,
+          tax: Math.round(price * 0.05),
+          grandTotal: price,
+          notes: `System generated dispatch order for "${pantry.name}" subscription cycle.`,
+          items: {
+            create: [
+              {
+                productId: `pantry-plan-${pantry.tier}`,
+                productName: `${pantry.name} Delivery`,
+                productSku: `pantry-${pantry.tier}`,
+                productSlug: `pantry-plan-${pantry.tier}`,
+                quantity: 1,
+                price: price,
+                weight: "Box",
+                image: "/images/subscriptions/seasonal-harvests.jpg",
+              }
+            ]
+          },
+          history: {
+            create: {
+              status: "processing",
+              notes: `Monthly dispatch generated successfully for ${pantry.name}. Awaiting pack house handoff.`,
+              changedBy: "admin",
+            }
+          }
+        }
+      })
+
+      // Update Schedule to completed
+      await tx.pantrySchedule.update({
+        where: { id: scheduleId },
+        data: {
+          status: "completed",
+          orderId: newOrder.id,
+        }
+      })
+
+      // Create delivery record
+      await tx.pantryDelivery.create({
+        data: {
+          pantryId,
+          orderId: newOrder.id,
+          dispatchWindow: pantry.deliveryWindow,
+          status: "processing",
+        }
+      })
+
+      // Create history entry
+      await tx.pantryHistory.create({
+        data: {
+          pantryId,
+          action: "order_generated",
+          notes: `Dispatch Order ${orderNumber} generated by admin for schedule date ${schedule.scheduledDate.toLocaleDateString()}.`,
+          changedBy: "admin",
+        }
+      })
+    })
+
+    revalidatePath("/admin/subscriptions")
+    revalidatePath("/account")
+    return { success: true }
+  } catch (error) {
+    console.error("Admin failed to trigger pantry dispatch:", error)
+    return { success: false, error: "Failed to process dispatch order generation." }
+  }
+}

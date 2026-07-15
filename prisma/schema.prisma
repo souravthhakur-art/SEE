@@ -1,0 +1,627 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String    @id @default(cuid())
+  fullName      String
+  email         String    @unique
+  phone         String?   @unique
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  emailVerified Boolean   @default(false)
+  image         String?
+  role          String    @default("user")
+  banned        Boolean   @default(false)
+  banReason     String?
+  banExpires    DateTime?
+  marketingConsent Boolean @default(false)
+  addresses     Address[]
+  accounts      Account[]
+  sessions      Session[]
+  orders        Order[]
+  redemptions   PromotionRedemption[]
+  pantries      Pantry[]
+
+  @@map("user")
+}
+
+model Address {
+  id               String   @id @default(cuid())
+  userId           String
+  label            String?
+  addressLine1     String
+  addressLine2     String?
+  city             String
+  state            String
+  postalCode       String
+  country          String   @default("India")
+  phone            String?
+  isDefault        Boolean  @default(false)
+  isDefaultShipping Boolean @default(false)
+  isDefaultBilling  Boolean @default(false)
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+  user             User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  pantries         Pantry[]
+
+  @@index([userId])
+}
+
+model Category {
+  id              String     @id @default(cuid())
+  slug            String     @unique
+  name            String
+  description     String?
+  parentId        String?
+  featured        Boolean    @default(false)
+  active          Boolean    @default(true)
+  image           String?
+  seoTitle        String?
+  seoDescription  String?
+  displayOrder    Int        @default(0)
+  createdAt       DateTime   @default(now())
+  updatedAt       DateTime   @updatedAt
+  parent          Category?  @relation("CategoryHierarchy", fields: [parentId], references: [id])
+  children        Category[] @relation("CategoryHierarchy")
+  products        Product[]
+
+  @@index([parentId])
+  @@index([featured])
+  @@index([active])
+}
+
+model Collection {
+  id           String              @id @default(cuid())
+  slug         String              @unique
+  name         String
+  description  String?
+  featured     Boolean             @default(false)
+  active       Boolean             @default(true)
+  image        String?
+  displayOrder Int                 @default(0)
+  createdAt    DateTime            @default(now())
+  updatedAt    DateTime            @updatedAt
+  products     CollectionProduct[]
+
+  @@index([featured])
+  @@index([active])
+}
+
+model CollectionProduct {
+  id           String     @id @default(cuid())
+  collectionId String
+  productId    String
+  displayOrder Int        @default(0)
+  createdAt    DateTime   @default(now())
+  collection   Collection @relation(fields: [collectionId], references: [id], onDelete: Cascade)
+  product      Product    @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@unique([collectionId, productId])
+  @@index([collectionId])
+  @@index([productId])
+}
+
+model Product {
+  id                   String           @id @default(cuid())
+  slug                 String           @unique
+  name                 String
+  categoryId           String
+  shortDescription     String
+  description          String
+  whyWeSelected        String
+  regionStory          String
+  regionImage          String?
+  ingredients          String[]
+  attributes           String[]
+  howToEnjoy           String[]
+  storage              String
+  shippingNote         String
+  weight               String
+  isLimited            Boolean          @default(false)
+  originDistrict       String?
+  originState          String?
+  sku                  String           @unique
+  hsnCode              String?
+  gstRate              Decimal          @db.Decimal(5, 2)
+  taxInclusive         Boolean          @default(true)
+  mrp                  Int
+  sellingPrice         Int
+  costPrice            Int?
+  stock                Int              @default(0)
+  lowStockThreshold    Int              @default(0)
+  shelfLife            String?
+  batchNumber          String?
+  fulfilledBy          FulfilledBy?
+  harvestDate          DateTime?
+  packedDate           DateTime?
+  bestBefore           DateTime?
+  fssaiLicenseRef      String?
+  featured             Boolean          @default(false)
+  showInShop           Boolean          @default(true)
+  subscriptionEligible Boolean          @default(false)
+  subscriptionPlans    String[]
+  displayOrder         Int              @default(0)
+  status               ProductStatus    @default(draft)
+  createdAt            DateTime         @default(now())
+  updatedAt            DateTime         @updatedAt
+  category             Category         @relation(fields: [categoryId], references: [id])
+  media                ProductMedia[]
+  source               ProductSource?
+  relatedProducts      RelatedProduct[] @relation("ProductRelatedProducts")
+  relatedToProducts    RelatedProduct[] @relation("ProductRelatedTo")
+  collections          CollectionProduct[]
+  orderItems           OrderItem[]
+  pantryItems          PantryItem[]
+  stockAdjustments     StockAdjustment[]
+
+  @@index([status])
+  @@index([categoryId])
+  @@index([createdAt])
+  @@index([featured])
+  @@index([showInShop])
+  @@index([sellingPrice])
+}
+
+model RelatedProduct {
+  id               String   @id @default(cuid())
+  productId        String
+  relatedProductId String
+  displayOrder     Int      @default(0)
+  createdAt        DateTime @default(now())
+  product          Product  @relation("ProductRelatedProducts", fields: [productId], references: [id], onDelete: Cascade)
+  relatedProduct   Product  @relation("ProductRelatedTo", fields: [relatedProductId], references: [id], onDelete: Cascade)
+
+  @@unique([productId, relatedProductId])
+  @@index([productId])
+  @@index([relatedProductId])
+}
+
+model ProductSource {
+  id           String       @id @default(cuid())
+  productId    String       @unique
+  village      String?
+  district     String
+  state        String
+  producerName String
+  producerType ProducerType
+  craftMethod  String?
+  latitude     Float?
+  longitude    Float?
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+  product      Product      @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@index([productId])
+}
+
+model NewsletterSubscriber {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  source       String?
+  isActive     Boolean  @default(true)
+  subscribedAt DateTime @default(now())
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model Session {
+  id             String   @id
+  expiresAt      DateTime
+  token          String   @unique
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  ipAddress      String?
+  userAgent      String?
+  userId         String
+  impersonatedBy String?
+  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("session")
+}
+
+model Account {
+  id                    String    @id
+  accountId             String
+  providerId            String
+  userId                String
+  accessToken           String?
+  refreshToken          String?
+  idToken               String?
+  accessTokenExpiresAt  DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope                 String?
+  password              String?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("account")
+}
+
+model Verification {
+  id         String   @id
+  identifier String
+  value      String
+  expiresAt  DateTime
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([identifier])
+  @@map("verification")
+}
+
+enum ProductStatus {
+  active
+  draft
+  archived
+}
+
+enum ProducerType {
+  shg
+  farm
+  cooperative
+  estate
+}
+
+enum FulfilledBy {
+  palum_dhara
+  shg
+  farmer_collective
+  partner_producer
+}
+
+enum OrderStatus {
+  processing
+  packed
+  shipped
+  delivered
+  cancelled
+  pending
+  confirmed
+  picking
+  packing
+  ready_to_dispatch
+  dispatched
+  returned
+}
+
+model Order {
+  id               String               @id @default(cuid())
+  orderNumber      String               @unique
+  userId           String?
+  customerName     String
+  customerEmail    String
+  customerPhone    String?
+  shippingAddress  Json
+  billingAddress   Json?
+  status           OrderStatus          @default(processing)
+  subtotal         Int
+  shippingFee      Int                  @default(0)
+  discount         Int                  @default(0)
+  tax              Int                  @default(0)
+  grandTotal       Int
+  couponCode       String?
+  notes            String?
+  createdAt        DateTime             @default(now())
+  updatedAt        DateTime             @updatedAt
+  user             User?                @relation(fields: [userId], references: [id], onDelete: SetNull)
+  items            OrderItem[]
+  history          OrderHistory[]
+  redemptions      PromotionRedemption[]
+  couponId         String?
+  coupon           Coupon?              @relation(fields: [couponId], references: [id], onDelete: SetNull)
+  promotionId      String?
+  promotion        Promotion?           @relation(fields: [promotionId], references: [id], onDelete: SetNull)
+  pantrySchedules  PantrySchedule[]
+  pantryDeliveries PantryDelivery[]
+  invoice          Invoice?
+
+  @@index([userId])
+  @@index([status])
+  @@index([createdAt])
+}
+
+model OrderItem {
+  id          String   @id @default(cuid())
+  orderId     String
+  productId   String?
+  productName String
+  productSku  String
+  productSlug String
+  quantity    Int
+  price       Int      // snapshotted unit price in INR
+  weight      String
+  image       String
+  order       Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  product     Product? @relation(fields: [productId], references: [id], onDelete: SetNull)
+
+  @@index([orderId])
+  @@index([productId])
+}
+
+model OrderHistory {
+  id        String      @id @default(cuid())
+  orderId   String
+  status    OrderStatus
+  notes     String?
+  changedBy String?
+  createdAt DateTime    @default(now())
+  order     Order       @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+  @@index([orderId])
+}
+
+model Coupon {
+  id               String                @id @default(cuid())
+  code             String                @unique
+  description      String?
+  discountType     String                // "percentage" or "fixed"
+  discountValue    Int
+  minOrderValue    Int?
+  active           Boolean               @default(true)
+  firstOrderOnly   Boolean               @default(false)
+  usageLimit       Int?
+  usageCount       Int                   @default(0)
+  createdAt        DateTime              @default(now())
+  updatedAt        DateTime              @updatedAt
+  orders           Order[]
+  redemptions      PromotionRedemption[]
+}
+
+model Promotion {
+  id             String                @id @default(cuid())
+  name           String
+  description    String?
+  code           String?               @unique // Optional if auto-applied, or matching specific code
+  discountType   String                // "percentage" or "fixed"
+  discountValue  Int
+  minOrderValue  Int?
+  active         Boolean               @default(true)
+  firstOrderOnly Boolean               @default(false)
+  onePerCustomer Boolean               @default(true)
+  createdAt      DateTime              @default(now())
+  updatedAt      DateTime              @updatedAt
+  orders         Order[]
+  redemptions    PromotionRedemption[]
+}
+
+model PromotionRedemption {
+  id            String     @id @default(cuid())
+  promotionId   String?
+  couponId      String?
+  orderId       String
+  userId        String?
+  customerEmail String
+  createdAt     DateTime   @default(now())
+  promotion     Promotion? @relation(fields: [promotionId], references: [id], onDelete: Cascade)
+  coupon        Coupon?    @relation(fields: [couponId], references: [id], onDelete: Cascade)
+  order         Order      @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  user          User?      @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([promotionId])
+  @@index([couponId])
+  @@index([orderId])
+  @@index([userId])
+}
+
+model Discount {
+  id             String   @id @default(cuid())
+  name           String
+  value          Int
+  type           String   // e.g. "percentage" or "fixed"
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+}
+
+model OrderNotes {
+  id        String   @id @default(cuid())
+  orderId   String
+  note      String
+  createdAt DateTime @default(now())
+}
+
+// Sprint 2.3 — Central Media Library. Restored as source of truth after a
+// Sprint 2.6 regression replaced it with an incompatible upload-oriented
+// model (filename/mimeType/dimensions/uploadedBy) that broke Product/Media
+// integration. Media assets are first-class, reusable records that any
+// product (and, in future, journal/maker content) can reference, rather
+// than each product owning its own copies of url/altText/caption.
+model Media {
+  id           String         @id @default(cuid())
+  url          String         @unique
+  altText      String
+  caption      String?
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+  productMedia ProductMedia[]
+}
+
+enum MediaRole {
+  featured
+  gallery
+}
+
+model ProductMedia {
+  id           String    @id @default(cuid())
+  productId    String
+  mediaId      String
+  role         MediaRole @default(gallery)
+  displayOrder Int       @default(0)
+  createdAt    DateTime  @default(now())
+  product      Product   @relation(fields: [productId], references: [id], onDelete: Cascade)
+  media        Media     @relation(fields: [mediaId], references: [id], onDelete: Cascade)
+
+  @@unique([productId, mediaId])
+  @@index([productId])
+  @@index([mediaId])
+}
+
+model Pantry {
+  id                 String           @id @default(cuid())
+  userId             String
+  name               String           // e.g., "Family Pantry", "Daily Staples"
+  status             String           @default("active") // "active", "paused", "cancelled"
+  deliveryWindow     String           // "early_month" or "late_month"
+  frequency          String           // "monthly", "bi_monthly", "tri_monthly"
+  tier               String           // "monthly" (0% save), "three_month" (5% save), "six_month" (10% save)
+  savingPercent      Int              @default(0)
+  shippingAddressId  String?
+  createdAt          DateTime         @default(now())
+  updatedAt          DateTime         @updatedAt
+  
+  user               User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  shippingAddress    Address?         @relation(fields: [shippingAddressId], references: [id], onDelete: SetNull)
+  items              PantryItem[]
+  schedules          PantrySchedule[]
+  pauses             PantryPause[]
+  deliveries         PantryDelivery[]
+  history            PantryHistory[]
+
+  @@index([userId])
+  @@index([status])
+}
+
+model PantryItem {
+  id                 String           @id @default(cuid())
+  pantryId           String
+  productId          String
+  quantity           Int              @default(1)
+  createdAt          DateTime         @default(now())
+  updatedAt          DateTime         @updatedAt
+
+  pantry             Pantry           @relation(fields: [pantryId], references: [id], onDelete: Cascade)
+  product            Product          @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@unique([pantryId, productId])
+  @@index([pantryId])
+  @@index([productId])
+}
+
+model PantrySchedule {
+  id                 String           @id @default(cuid())
+  pantryId           String
+  scheduledDate      DateTime         // Estimated date / target delivery month-year
+  status             String           @default("pending") // "pending", "skipped", "completed"
+  orderId            String?
+  createdAt          DateTime         @default(now())
+  updatedAt          DateTime         @updatedAt
+
+  pantry             Pantry           @relation(fields: [pantryId], references: [id], onDelete: Cascade)
+  order              Order?           @relation(fields: [orderId], references: [id], onDelete: SetNull)
+
+  @@index([pantryId])
+  @@index([status])
+}
+
+model PantryPause {
+  id                 String           @id @default(cuid())
+  pantryId           String
+  pausedAt           DateTime         @default(now())
+  resumedAt          DateTime?
+  reason             String?
+  createdAt          DateTime         @default(now())
+  updatedAt          DateTime         @updatedAt
+
+  pantry             Pantry           @relation(fields: [pantryId], references: [id], onDelete: Cascade)
+
+  @@index([pantryId])
+}
+
+model PantryDelivery {
+  id                 String           @id @default(cuid())
+  pantryId           String
+  orderId            String           @unique
+  dispatchWindow     String           // "early_month" or "late_month"
+  deliveredAt        DateTime?
+  status             String           @default("processing") // "processing", "shipped", "delivered"
+  createdAt          DateTime         @default(now())
+  updatedAt          DateTime         @updatedAt
+
+  pantry             Pantry           @relation(fields: [pantryId], references: [id], onDelete: Cascade)
+  order              Order            @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+  @@index([pantryId])
+}
+
+model PantryHistory {
+  id                 String           @id @default(cuid())
+  pantryId           String
+  action             String           // "created", "paused", "resumed", "item_added", "item_removed", "item_quantity_changed", "frequency_changed", "tier_changed", "address_changed", "delivery_skipped", "order_generated"
+  notes              String?
+  changedBy          String           @default("customer") // "customer", "admin"
+  createdAt          DateTime         @default(now())
+
+  pantry             Pantry           @relation(fields: [pantryId], references: [id], onDelete: Cascade)
+
+  @@index([pantryId])
+}
+
+model AuditLog {
+  id          String   @id @default(cuid())
+  action      String   // e.g. "admin_action", "inventory_change", "price_change", "order_change", "pantry_change", "membership_change"
+  entityType  String   // e.g. "product", "order", "pantry", "coupon", "membership"
+  entityId    String
+  userId      String?
+  userName    String?
+  oldValue    Json?
+  newValue    Json?
+  notes       String?
+  createdAt   DateTime @default(now())
+
+  @@index([action])
+  @@index([entityType, entityId])
+}
+
+model StockAdjustment {
+  id          String   @id @default(cuid())
+  productId   String
+  quantity    Int      // positive for restock, negative for deduction
+  type        String   // "restock", "audit_adjustment", "order_reservation", "order_fulfilled", "damage", "returned"
+  notes       String?
+  adjustedBy  String?
+  createdAt   DateTime @default(now())
+  product     Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@index([productId])
+  @@index([type])
+}
+
+model ShippingRule {
+  id            String   @id @default(cuid())
+  name          String
+  type          String   // "flat", "free", "zone", "weight"
+  minOrderValue Int      @default(0)
+  fee           Int      @default(0)
+  zoneName      String?
+  states        String[]
+  weightLimit   Int?
+  active        Boolean  @default(true)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+model Invoice {
+  id            String   @id @default(cuid())
+  invoiceNumber String   @unique
+  orderId       String?  @unique
+  pantryId      String?
+  type          String   // "order" or "pantry"
+  subtotal      Int
+  shippingFee   Int      @default(0)
+  discount      Int      @default(0)
+  tax           Int      @default(0)
+  taxBreakdown  Json
+  grandTotal    Int
+  pdfUrl        String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  order         Order?   @relation(fields: [orderId], references: [id], onDelete: SetNull)
+}

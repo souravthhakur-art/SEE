@@ -1,0 +1,175 @@
+@import "tailwindcss";
+
+@theme {
+  --color-forest: #173728;
+  --color-ivory: #F7F3EC;
+  --color-charcoal: #2F2F2F;
+  --color-gold: #C68C2E;
+  --color-gold-light: #D4A84B;
+  --color-ivory-dark: #EDE8DF;
+  --color-forest-light: #1E4535;
+  --color-wood: #8A6F4F;
+  --color-wood-light: #B79A73;
+
+  /* Warmer Indian-premium accents (refinement pass) */
+  --color-terracotta: #B5654A;
+  --color-terracotta-muted: #C58068;
+  --color-walnut: #6B4A2B;
+  --color-stone: #A89F92;
+  --color-parchment: #F1E9D8;
+
+  --font-heading: "Cormorant Garamond", serif;
+  --font-body: "Inter", sans-serif;
+
+  --radius-sm: 2px;
+  --radius-md: 4px;
+  --radius-lg: 8px;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    font-family: var(--font-body);
+    color: var(--color-charcoal);
+    /* Warm handmade-paper background: layered ivory + parchment with a faint
+       grain (SVG feTurbulence, ~3% opacity) so the surface feels like cotton
+       paper instead of flat white. Kept very subtle per brief. */
+    background-color: var(--color-ivory);
+    background-image:
+      radial-gradient(ellipse at 18% 0%, rgba(241, 233, 216, 0.55), transparent 60%),
+      radial-gradient(ellipse at 90% 12%, rgba(231, 220, 197, 0.40), transparent 55%),
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.42 0 0 0 0 0.32 0 0 0 0 0.20 0 0 0 0.045 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    background-attachment: fixed, fixed, scroll;
+    background-repeat: no-repeat, no-repeat, repeat;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-heading);
+    font-weight: 400;
+    letter-spacing: -0.018em;
+    line-height: 1.08;
+  }
+
+  ::selection {
+    background-color: var(--color-forest);
+    color: var(--color-ivory);
+  }
+
+  /* Visible, on-brand focus ring for keyboard users across all interactive
+     elements — accessibility maintained through the refinement pass. */
+  :where(a, button, input, select, textarea, [tabindex]):focus-visible {
+    outline: 2px solid color-mix(in oklab, var(--color-forest) 55%, transparent);
+    outline-offset: 3px;
+    border-radius: var(--radius-sm);
+  }
+}
+
+@layer components {
+  /* Buttons — refined for a premium, tactile feel. Colors unchanged.
+     Added: 2px radius (softens without going modern), extra horizontal
+     padding, subtle hover shadow, active press, accessible focus ring. */
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 rounded-sm px-10 py-4 bg-forest text-ivory font-body text-sm tracking-widest uppercase transition-all duration-300 hover:bg-forest-light hover:shadow-[0_12px_28px_-12px_rgba(23,55,40,0.45)] active:translate-y-px;
+  }
+  /* Arrow inside a .btn-primary slides 6px on hover — Apple-style tactile cue */
+  .btn-primary svg {
+    transition: transform 300ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .btn-primary:hover svg {
+    transform: translateX(6px);
+  }
+
+  .section-padding {
+    @apply px-6 md:px-12 lg:px-20 xl:px-32;
+  }
+
+  .heading-lg {
+    @apply text-4xl md:text-5xl lg:text-6xl font-heading text-forest;
+  }
+
+  .heading-md {
+    @apply text-2xl md:text-3xl lg:text-4xl font-heading text-forest;
+  }
+
+  .heading-sm {
+    @apply text-xl md:text-2xl font-heading text-forest;
+  }
+
+  .body-lg {
+    @apply text-base md:text-lg text-charcoal/80 leading-relaxed;
+  }
+
+  /* Editorial label — small uppercase eyebrow text. */
+  .label {
+    @apply text-xs tracking-[0.2em] uppercase text-charcoal/50 font-body;
+  }
+  /* Ornate variant — pairs with a <LeafBullet /> for key section eyebrows. */
+  .label-ornate {
+    @apply inline-flex items-center gap-2 text-xs tracking-[0.2em] uppercase text-charcoal/50 font-body;
+  }
+  .label-ornate svg {
+    @apply w-3.5 h-3.5 text-forest/45;
+  }
+
+  .badge {
+    @apply inline-block px-3 py-1 text-[10px] tracking-[0.15em] uppercase border border-forest/20 text-forest/70;
+  }
+
+  /* Richer, warmer card shadow for product photography. */
+  .warm-card {
+    box-shadow:
+      0 10px 34px -14px rgba(107, 74, 43, 0.28),
+      0 3px 10px -3px rgba(23, 55, 40, 0.10),
+      inset 0 0 0 1px rgba(231, 220, 197, 0.35);
+  }
+  .warm-card-hover {
+    box-shadow:
+      0 22px 48px -18px rgba(107, 74, 43, 0.36),
+      0 6px 16px -4px rgba(23, 55, 40, 0.14),
+      inset 0 0 0 1px rgba(231, 220, 197, 0.45);
+  }
+
+  /* Editorial section divider — central rosette + curling vines. Tint via
+     text color; keep opacity very low so it reads as a marginal flourish. */
+  .ornament-divider {
+    @apply mx-auto text-forest;
+    opacity: 0.22;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  /* Slow cinematic zoom for hero imagery — 1 → 1.04 over 20s, ease-out.
+     No bounce, no loop jitter; a single restrained drift. */
+  .hero-zoom {
+    animation: hero-zoom 20s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    will-change: transform;
+  }
+}
+
+/* Keyframes declared at top level so Tailwind v4 always emits them. */
+@keyframes hero-zoom {
+  from { transform: scale(1); }
+  to   { transform: scale(1.04); }
+}
+
+/* Respect users who prefer reduced motion — disable all decorative motion. */
+@media (prefers-reduced-motion: reduce) {
+  .hero-zoom { animation: none; }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}

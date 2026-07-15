@@ -1,0 +1,77 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 700" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" preserveAspectRatio="xMidYMax slice" role="img" aria-label="Guler-inspired line illustration of Himalayan hills, tea gardens, a village and a river">
+  <!-- Distant snow range -->
+  <path d="M0,300 L120,250 L220,285 L340,220 L460,270 L580,235 L720,265 L860,225 L990,260 L1130,230 L1270,265 L1400,240 L1520,270 L1600,255" opacity="0.5"/>
+  <path d="M300,232 L340,220 L375,240 M540,250 L580,235 L615,255 M820,245 L860,225 L895,250 M1085,250 L1130,230 L1165,252" opacity="0.4"/>
+
+  <!-- Far hills -->
+  <path d="M0,360 C200,330 380,350 560,335 C740,322 900,345 1080,332 C1240,322 1420,342 1600,330" opacity="0.55"/>
+  <!-- Mid hills -->
+  <path d="M0,420 C160,392 340,408 520,395 C700,384 880,402 1060,392 C1220,384 1400,400 1600,392" opacity="0.7"/>
+  <path d="M0,470 C180,442 360,458 540,446 C720,436 900,452 1080,444 C1240,436 1420,452 1600,446" opacity="0.8"/>
+
+  <!-- Tea-garden rows on the near hill — parallel contour lines -->
+  <g opacity="0.85">
+    <path d="M40,520 C240,500 420,512 620,502 C800,494 980,506 1160,500 C1320,494 1480,504 1600,500"/>
+    <path d="M40,540 C240,522 420,534 620,524 C800,516 980,528 1160,522 C1320,516 1480,526 1600,522"/>
+    <path d="M40,560 C240,544 420,556 620,546 C800,538 980,550 1160,544 C1320,538 1480,548 1600,544"/>
+    <path d="M40,580 C240,566 420,578 620,568 C800,560 980,572 1160,566 C1320,560 1480,570 1600,566"/>
+    <path d="M40,600 C240,588 420,600 620,590 C800,582 980,594 1160,588 C1320,582 1480,592 1600,588"/>
+  </g>
+
+  <!-- River winding through the valley -->
+  <path d="M-20,640 C160,612 240,648 380,632 C520,618 600,652 740,636 C880,620 960,654 1100,640 C1240,626 1340,656 1480,642 C1540,636 1580,644 1620,640" stroke-width="1.8" opacity="0.6"/>
+  <path d="M120,628 C140,624 160,628 180,626 M340,624 C360,620 380,624 400,622 M560,628 C580,624 600,628 620,626 M780,624 C800,620 820,624 840,622 M1000,628 C1020,624 1040,628 1060,626" opacity="0.4"/>
+
+  <!-- Tiny village — sloped-roof houses + a temple spire -->
+  <g transform="translate(1180,455)" opacity="0.9">
+    <path d="M0,18 L12,6 L24,18 L24,34 L0,34 Z"/>
+    <path d="M12,6 L12,2 M8,34 L8,28 L16,28 L16,34"/>
+    <path d="M30,22 L40,12 L50,22 L50,34 L30,34 Z"/>
+    <path d="M40,12 L40,8 M34,34 L34,28 L46,28 L46,34"/>
+  </g>
+  <g transform="translate(1260,468)" opacity="0.85">
+    <path d="M0,16 L10,6 L20,16 L20,30 L0,30 Z"/>
+    <path d="M10,6 L10,2 M5,30 L5,24 L15,24 L15,30"/>
+  </g>
+  <!-- Temple spire -->
+  <g transform="translate(1230,432)" opacity="0.85">
+    <path d="M0,40 L8,40 L8,22 L4,22 L4,14 L8,8 L12,14 L12,22 L8,22 M4,0 L8,-6 L12,0"/>
+    <path d="M8,-6 L8,8" opacity="0.6"/>
+  </g>
+
+  <!-- Deodar / pine trees -->
+  <g transform="translate(90,470)" opacity="0.85">
+    <path d="M8,40 L8,30 M0,32 L8,18 L16,32 M3,24 L8,14 L13,24 M5,18 L8,10 L11,18"/>
+  </g>
+  <g transform="translate(140,488)" opacity="0.8">
+    <path d="M6,30 L6,22 M0,24 L6,12 L12,24 M2,18 L6,8 L10,18 M4,12 L6,4 L8,12"/>
+  </g>
+  <g transform="translate(1480,478)" opacity="0.85">
+    <path d="M8,40 L8,30 M0,32 L8,18 L16,32 M3,24 L8,14 L13,24 M5,18 L8,10 L11,18"/>
+  </g>
+  <g transform="translate(1538,494)" opacity="0.8">
+    <path d="M6,30 L6,22 M0,24 L6,12 L12,24 M2,18 L6,8 L10,18 M4,12 L6,4 L8,12"/>
+  </g>
+
+  <!-- Wildflower sprigs in the foreground -->
+  <g transform="translate(220,612)" opacity="0.7">
+    <path d="M0,18 L0,4 M0,10 L-4,8 M0,10 L4,8 M0,4 C-2,3 -2,1 0,0 C2,1 2,3 0,4"/>
+  </g>
+  <g transform="translate(700,618)" opacity="0.7">
+    <path d="M0,16 L0,2 M0,8 L-4,6 M0,8 L4,6 M0,2 C-2,1 -2,-1 0,-2 C2,-1 2,1 0,2"/>
+  </g>
+  <g transform="translate(1060,614)" opacity="0.7">
+    <path d="M0,18 L0,4 M0,10 L-4,8 M0,10 L4,8 M0,4 C-2,3 -2,1 0,0 C2,1 2,3 0,4"/>
+  </g>
+
+  <!-- A couple of birds in the sky -->
+  <g transform="translate(340,150)" opacity="0.55">
+    <path d="M0,0 C4,-4 8,-4 12,0 M12,0 C16,-4 20,-4 24,0"/>
+  </g>
+  <g transform="translate(420,128)" opacity="0.5">
+    <path d="M0,0 C3,-3 6,-3 9,0 M9,0 C12,-3 15,-3 18,0"/>
+  </g>
+  <g transform="translate(960,140)" opacity="0.5">
+    <path d="M0,0 C4,-4 8,-4 12,0 M12,0 C16,-4 20,-4 24,0"/>
+  </g>
+</svg>
