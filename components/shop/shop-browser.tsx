@@ -57,7 +57,7 @@ export default function ShopBrowser() {
   return (
     <>
       {/* Search + Filters */}
-      <section className="section-padding py-5 md:py-6 border-b border-forest/5 sticky top-16 md:top-[4.5rem] bg-ivory/95 backdrop-blur-md z-40">
+      <section className="section-padding py-5 md:py-6 border-b border-forest/5 sticky top-[4.75rem] md:top-[5.5rem] bg-ivory/95 backdrop-blur-md z-40">
         <div className="max-w-7xl mx-auto">
           {/* Search */}
           <div className="mb-4">

@@ -42,72 +42,83 @@ export default function Navigation() {
   return (
     <>
       <header
-        className={`fixed top-0 left-0 right-0 z-50 transition-colors duration-300 ${
-          floating
-            ? "bg-transparent border-b border-transparent"
-            : "bg-ivory/95 backdrop-blur-md border-b border-forest/10 shadow-[0_8px_24px_-22px_rgba(23,55,40,0.45)]"
-        }`}
+        className="fixed top-0 left-0 right-0 z-50"
       >
-        <div className="section-padding">
-          <div className="flex items-center justify-between h-16 md:h-[4.5rem]">
-            {/* Logo */}
-            <Link href="/" className="flex items-center gap-2">
-              <span
-                className={`font-heading text-2xl md:text-3xl tracking-tight transition-colors duration-500 ${
-                  floating ? "text-ivory" : "text-forest"
-                }`}
-              >
-                Palum Dhara
-              </span>
-            </Link>
+        {/* Thin elegant announcement bar */}
+        <div className="bg-forest text-ivory text-[8.5px] md:text-[9.5px] tracking-[0.24em] uppercase font-body font-semibold h-7 md:h-8 flex items-center justify-center border-b border-white/5 select-none w-full">
+          Fresh Seasonal Harvest Available • Free Shipping Above ₹999
+        </div>
 
-            {/* Desktop Nav */}
-            <nav className="hidden md:flex items-center gap-7 lg:gap-9">
-              {navLinks.map((link) => (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  className={`relative py-2 text-[11px] tracking-[0.14em] uppercase transition-colors duration-300 after:absolute after:bottom-0 after:left-0 after:h-px after:w-full after:origin-left after:scale-x-0 after:transition-transform after:duration-300 hover:after:scale-x-100 ${
-                    pathname === link.href
-                      ? floating
-                        ? "text-ivory after:scale-x-100 after:bg-gold-light"
-                        : "text-forest after:scale-x-100 after:bg-gold"
-                      : floating
-                      ? link.primary
-                        ? "text-ivory after:bg-gold-light"
-                        : "text-ivory/75 hover:text-ivory after:bg-ivory"
-                      : link.primary
-                        ? "text-forest after:bg-gold"
-                        : "text-charcoal/65 hover:text-forest after:bg-forest"
+        {/* Navigation bar */}
+        <div
+          className={`transition-all duration-500 ease-in-out ${
+            floating
+              ? "bg-transparent border-b border-transparent py-2.5"
+              : "bg-ivory/95 backdrop-blur-md border-b border-forest/10 shadow-[0_8px_32px_-24px_rgba(23,55,40,0.12)] py-0"
+          }`}
+        >
+          <div className="section-padding">
+            <div className="flex items-center justify-between h-10 md:h-12">
+              {/* Logo */}
+              <Link href="/" className="flex items-center gap-2 hover:opacity-95 transition-opacity py-0.5">
+                <span
+                  className={`font-heading text-2.5xl md:text-3xl font-semibold tracking-wide transition-colors duration-500 ${
+                    floating 
+                      ? "text-ivory drop-shadow-[0_1.5px_3px_rgba(0,0,0,0.15)]" 
+                      : "text-forest"
                   }`}
                 >
-                  {link.label}
-                </Link>
-              ))}
-            </nav>
+                  Palum Dhara
+                </span>
+              </Link>
 
-            {/* Right side */}
-            <div className="flex items-center gap-2.5 md:gap-4">
-              {session ? (
-                <div 
-                  className="relative"
-                  onMouseEnter={() => setIsDropdownOpen(true)}
-                  onMouseLeave={() => setIsDropdownOpen(false)}
-                >
-                  <button
-                    onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                    className={`relative p-2 transition-colors duration-300 cursor-pointer flex items-center gap-0.5 ${
-                      floating ? "text-ivory hover:text-ivory/70" : "text-forest hover:text-forest-light"
+              {/* Desktop Nav */}
+              <nav className="hidden md:flex items-center gap-6 lg:gap-8">
+                {navLinks.map((link) => (
+                  <Link
+                    key={link.href}
+                    href={link.href}
+                    className={`relative py-1 text-[10px] tracking-[0.16em] uppercase transition-colors duration-300 after:absolute after:bottom-0 after:left-0 after:h-px after:w-full after:origin-left after:scale-x-0 after:transition-transform after:duration-300 hover:after:scale-x-100 ${
+                      pathname === link.href
+                        ? floating
+                          ? "text-ivory after:scale-x-100 after:bg-gold-light"
+                          : "text-forest after:scale-x-100 after:bg-gold"
+                        : floating
+                        ? link.primary
+                          ? "text-ivory after:bg-gold-light"
+                          : "text-ivory/75 hover:text-ivory after:bg-ivory"
+                        : link.primary
+                          ? "text-forest after:bg-gold"
+                          : "text-charcoal/65 hover:text-forest after:bg-forest"
                     }`}
-                    id="nav-account-dropdown-trigger"
-                    aria-label="Account Menu"
                   >
-                    <User className="w-5 h-5" strokeWidth={1.5} />
-                    <ChevronDown className="w-3 h-3 opacity-70 transition-transform duration-200" />
-                  </button>
+                    {link.label}
+                  </Link>
+                ))}
+              </nav>
 
-                  {isDropdownOpen && (
-                    <div className="absolute right-0 top-full mt-1 w-48 bg-ivory border border-forest/15 py-2 shadow-lg rounded-sm z-[100] animate-fade-in" id="nav-account-dropdown">
+              {/* Right side */}
+              <div className="flex items-center gap-2 md:gap-3">
+                {session ? (
+                  <div 
+                    className="relative"
+                    onMouseEnter={() => setIsDropdownOpen(true)}
+                    onMouseLeave={() => setIsDropdownOpen(false)}
+                  >
+                    <button
+                      onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                      className={`relative p-2 transition-colors duration-300 cursor-pointer flex items-center gap-0.5 ${
+                        floating ? "text-ivory hover:text-ivory/70" : "text-forest hover:text-forest-light"
+                      }`}
+                      id="nav-account-dropdown-trigger"
+                      aria-label="Account Menu"
+                    >
+                      <User className="w-4.5 h-4.5" strokeWidth={1.5} />
+                      <ChevronDown className="w-3 h-3 opacity-70 transition-transform duration-200" />
+                    </button>
+
+                    {isDropdownOpen && (
+                      <div className="absolute right-0 top-full mt-1 w-48 bg-ivory border border-forest/15 py-2 shadow-lg rounded-sm z-[100] animate-fade-in" id="nav-account-dropdown">
                       <Link
                         href="/account"
                         onClick={() => setIsDropdownOpen(false)}
@@ -173,6 +184,7 @@ export default function Navigation() {
               </button>
             </div>
           </div>
+        </div>
         </div>
 
         {/* Mobile Nav */}
@@ -253,7 +265,7 @@ export default function Navigation() {
 
       {/* Spacer so page content clears the fixed header. The home page's
           full-bleed hero fills this space itself, so it opts out. */}
-      {!isHome && <div className="h-16 md:h-[4.5rem]" aria-hidden="true" />}
+      {!isHome && <div className="h-[72px] md:h-[84px]" aria-hidden="true" />}
     </>
   );
 }

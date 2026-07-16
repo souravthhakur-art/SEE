@@ -41,42 +41,27 @@ export default function ProductCard({ product }: ProductCardProps) {
       </div>
 
       {/* Content */}
-      <div className="space-y-1">
-        {/* Origin district — provenance */}
-        <p className="text-[11px] uppercase tracking-[0.22em] text-forest/55">
-          FROM {product.originDistrict}
+      <div className="space-y-1.5 pt-2">
+        {/* Origin district & Weight — clean provenance */}
+        <p className="text-[9.5px] uppercase tracking-[0.22em] text-forest/60 font-body">
+          {product.originDistrict} • {product.weight}
         </p>
 
         {/* Product name */}
-        <h3 className="font-heading text-xl text-forest group-hover:text-forest-light transition-colors duration-300">
+        <h3 className="font-heading text-lg md:text-xl text-forest group-hover:text-forest-light transition-colors duration-300 leading-snug">
           {product.name}
         </h3>
 
-        {/* Short description — two lines max */}
-        <p className="text-xs text-charcoal/55 leading-relaxed line-clamp-2 pt-1">
-          {product.shortDescription}
-        </p>
-
-        {/* Weight */}
-        <p className="text-xs text-charcoal/40">
-          {product.weight}
-        </p>
-
         {/* Price */}
-        <p className="font-heading text-2xl text-forest pt-2">
+        <p className="font-heading text-lg md:text-xl text-forest/90">
           ₹{product.price}
-        </p>
-
-        {/* Shipping nudge */}
-        <p className="text-[10px] text-charcoal/40">
-          Free delivery on orders above ₹1000
         </p>
       </div>
 
       {/* Explore link */}
-      <div className="mt-4 inline-flex items-center gap-2 border-b border-forest/25 pb-1 text-xs tracking-[0.15em] uppercase text-forest/70 group-hover:border-forest group-hover:text-forest transition-colors">
+      <div className="mt-3.5 inline-flex items-center gap-1.5 border-b border-forest/15 pb-0.5 text-[10px] tracking-[0.16em] uppercase text-forest/75 group-hover:border-forest group-hover:text-forest transition-colors font-body font-medium">
         Explore
-        <ArrowRight className="w-3.5 h-3.5 transition-transform duration-300 ease-out group-hover:translate-x-1.5" />
+        <ArrowRight className="w-3 h-3 transition-transform duration-300 ease-out group-hover:translate-x-1" />
       </div>
     </Link>
   );

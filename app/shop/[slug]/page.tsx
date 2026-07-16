@@ -209,10 +209,10 @@ export default async function ProductPage({ params }: ProductPageProps) {
         </div>
       </section>
 
-      {/* Traceability — Premium grid with icons */}
+      {/* Provenance — Premium grid with icons */}
       <section className="bg-forest/5 section-padding py-16 md:py-24">
         <Reveal className="max-w-4xl mx-auto">
-          <p className="label mb-8 text-center">Traceability</p>
+          <p className="label mb-8 text-center">Provenance</p>
           <div className="grid grid-cols-2 md:grid-cols-5 gap-px bg-forest/10">
             <TraceabilityItem
               icon="🌱"

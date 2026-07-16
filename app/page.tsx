@@ -19,7 +19,7 @@ export default function HomePage() {
   return (
     <>
       {/* HERO */}
-      <section className="relative min-h-[86svh] md:min-h-[88vh] flex items-center overflow-hidden">
+      <section className="relative min-h-[92svh] md:min-h-[95vh] flex items-center overflow-hidden bg-forest select-none">
         {/* Background — Natural vibrant Kangra Valley tea gardens */}
         <div className="absolute inset-0 overflow-hidden">
           <Image
@@ -31,52 +31,73 @@ export default function HomePage() {
             priority
           />
         </div>
-        {/* Simple elegant overlay for excellent white text readability */}
-        <div className="absolute inset-0 bg-black/45 z-[2]" />
+        
+        {/* Soft overlay to preserve image clarity while keeping text perfectly legible */}
+        <div className="absolute inset-0 bg-black/30 z-[2]" />
 
-        <div className="relative z-10 section-padding w-full pt-28 pb-20 md:pt-32 md:pb-24">
-          <div className="max-w-3xl">
-            {/*
-              Est. 2026 · Palampur, Himachal Pradesh
-            */}
-            <h1 className="font-heading text-5xl md:text-7xl lg:text-8xl text-ivory mb-5 leading-[1.05] text-balance">
-              Bringing Himachal Pradesh<br />to Your Home.
+        <div className="relative z-10 section-padding w-full pt-36 pb-20 md:pt-44 md:pb-24 flex items-center justify-center max-w-7xl mx-auto">
+          <div className="max-w-2xl text-center flex flex-col items-center justify-center">
+            <p className="text-[10px] md:text-xs uppercase tracking-[0.25em] text-ivory/80 mb-5 font-body font-semibold">
+              Bringing the Himalayas Home.
+            </p>
+            <h1 className="font-heading text-3.5xl sm:text-4.5xl md:text-5xl lg:text-5.5xl text-ivory mb-5 leading-[1.12] tracking-tight text-balance">
+              Authentic Himalayan Flavours,<br /> Brought to Your Home.
             </h1>
-            <p className="text-lg md:text-xl text-ivory/90 max-w-2xl mb-3 leading-relaxed text-balance">
-              Exceptional tea, honey, preserves and pantry staples from the Himalayan foothills.
+            <p className="text-xs sm:text-sm md:text-[15px] text-ivory/75 max-w-md md:max-w-lg mx-auto mb-10 leading-relaxed font-body">
+              Tea, honey and pantry essentials sourced directly from farmers and producers across Himachal Pradesh.
             </p>
-            <p className="text-sm md:text-base text-ivory/70 max-w-xl mb-8 leading-relaxed">
-              Sourced directly from trusted growers and women-led groups, with detailed batch provenance.
-            </p>
-            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
-              <Link href="/shop" className="btn-primary w-full sm:w-auto">
-                Shop Now
-                <ArrowRight className="w-4 h-4 ml-2" strokeWidth={1.5} />
+            <div className="flex flex-row items-center justify-center gap-4">
+              <Link href="/shop" className="btn-primary">
+                SHOP COLLECTION
+                <ArrowRight className="w-3.5 h-3.5" strokeWidth={1.5} />
               </Link>
-              <Link
-                href="/subscriptions"
-                className="inline-flex items-center justify-center px-8 py-4 border border-ivory/55 text-ivory font-body text-sm tracking-widest uppercase transition-all duration-300 hover:border-ivory hover:bg-ivory/10 w-full sm:w-auto"
-              >
-                Subscriptions
+              <Link href="/subscriptions" className="btn-outline-ivory">
+                SUBSCRIBE NOW
               </Link>
             </div>
-            <ul className="mt-8 flex max-w-2xl flex-wrap gap-x-5 gap-y-2 text-[10px] md:text-[11px] tracking-[0.12em] uppercase text-ivory/75" aria-label="Palum Dhara commitments">
-              <li>Direct from Himachal Pradesh</li>
-              <li>Small Batch</li>
-              <li>Detailed Provenance</li>
-              <li>Women-led SHGs</li>
-            </ul>
           </div>
         </div>
 
-        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce z-10">
-          <ChevronDown className="w-5 h-5 text-ivory/50" strokeWidth={1} />
+        {/* Scroll indicator with text */}
+        <div className="absolute bottom-12 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1.5 z-10 select-none cursor-pointer">
+          <span className="text-[8.5px] uppercase tracking-[0.3em] text-ivory/55 font-body font-semibold">Scroll</span>
+          <ChevronDown className="w-3.5 h-3.5 text-ivory/55 animate-bounce" strokeWidth={1} />
         </div>
       </section>
 
+      {/* EDITORIAL INTRODUCTION — STORY BEFORE COMMERCE */}
+      <section className="bg-ivory section-padding py-16 md:py-24 relative overflow-hidden text-center">
+        <div className="max-w-3xl mx-auto space-y-6 md:space-y-8 flex flex-col items-center justify-center">
+          {/* Refined editorial intro card */}
+          <div className="space-y-4 md:space-y-6 flex flex-col items-center">
+            <Reveal className="space-y-2.5 flex flex-col items-center">
+              <p className="text-[9px] md:text-[10px] uppercase tracking-[0.25em] text-forest/60 font-body font-semibold flex items-center gap-2 justify-center">
+                <span className="w-1.5 h-1.5 rounded-full bg-gold inline-block animate-pulse" />
+                Rooted in Himachal Pradesh
+              </p>
+              <h2 className="font-heading text-3.5xl sm:text-4.5xl text-forest leading-tight tracking-tight text-balance max-w-2xl">
+                Honouring the Small Batch, Preserving the Old Ways.
+              </h2>
+            </Reveal>
+            <Reveal>
+              <p className="font-body text-xs sm:text-sm md:text-[15px] text-charcoal/80 leading-relaxed text-balance max-w-2xl">
+                Deep within the mist-layered valleys of Himachal Pradesh, Palum Dhara preserves a heritage of high-altitude farming. We source exceptional, single-origin teas, wild honeys, and seasonal pantry staples directly from local growers and women-led cooperatives. By honoring traditional craftsmanship, we bring the pure, unhurried essence of the Himalayas directly to your table—cultivating trust, batch provenance, and deep respect for the land.
+              </p>
+            </Reveal>
+            <Reveal className="pt-1">
+              <span className="font-heading italic text-lg text-forest/80 tracking-wide font-medium flex items-center gap-3 justify-center">
+                Palum Dhara
+                <span className="w-6 h-px bg-forest/20 inline-block" />
+              </span>
+            </Reveal>
+          </div>
+        </div>
+      </section>
+
+
       <TrustBar />
 
-      <section className="section-padding py-16 md:py-20">
+      <section className="section-padding py-24 md:py-32">
         <div className="max-w-7xl mx-auto">
           <div className="flex items-end justify-between gap-6 mb-8 md:mb-10">
             <div>
@@ -104,7 +125,7 @@ export default function HomePage() {
           The name Palum Dhara comes from the local words for water and
           stream. This section roots the brand in place before any product
           is shown, so the collection below reads as "collected from here". */}
-      <section className="section-padding py-20 md:py-28">
+      <section className="section-padding py-24 md:py-36">
         <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
           <Reveal>
             <EditorialImage
@@ -140,7 +161,7 @@ export default function HomePage() {
       </PullQuote>
 
       {/* WHY YOU'LL LOVE PALUM DHARA? */}
-      <section className="bg-forest/5 section-padding py-20 md:py-28">
+      <section className="section-padding py-24 md:py-36">
         <div className="max-w-7xl mx-auto">
           <Reveal className="text-center mb-12 md:mb-16">
             <p className="label-ornate mb-3 justify-center"><LeafBullet /> Why Palum Dhara?</p>
@@ -171,7 +192,7 @@ export default function HomePage() {
       </section>
 
       {/* OUR REGIONS */}
-      <section className="bg-forest/5 section-padding py-20 md:py-28">
+      <section className="bg-forest/5 section-padding py-24 md:py-36">
         <div className="max-w-7xl mx-auto">
           <Reveal className="text-center mb-12 md:mb-16">
             <p className="label-ornate mb-3 justify-center"><LeafBullet /> Our Regions</p>
@@ -212,7 +233,7 @@ export default function HomePage() {
           pantry staples behind the collection. No posed or AI-generated
           people; every image here is a real product, landscape or still-life
           asset, ready to be swapped for verified documentary photography. */}
-      <section className="bg-forest/5 section-padding py-20 md:py-28">
+      <section className="section-padding py-24 md:py-36">
         <div className="max-w-7xl mx-auto">
           <Reveal className="mb-12 md:mb-16">
             <p className="label-ornate mb-3"><LeafBullet /> Field Notes</p>
