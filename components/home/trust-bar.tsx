@@ -4,7 +4,7 @@ const trustItems = [
   { icon: Compass, label: "Single Origin Leaves", sublabel: "From Palampur & Baijnath gardens" },
   { icon: Droplet, label: "Raw Unfiltered Nectar", sublabel: "Harvested from Bir & Chamba ranges" },
   { icon: Award, label: "Traditional Micro-Batches", sublabel: "Prepared slowly in brass vessels" },
-  { icon: Fingerprint, label: "100% Traceable Jars", sublabel: "Harvest date & batch on every lid" },
+  { icon: Fingerprint, label: "Detailed Batch Sourcing", sublabel: "Harvest details on every jar" },
 ];
 
 export default function TrustBar() {

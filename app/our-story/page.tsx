@@ -106,7 +106,7 @@ export default function OurStoryPage() {
               <LeafBullet /> Our Philosophy
             </p>
             <h2 className="heading-md">How We Source</h2>
-            <p className="text-sm text-charcoal/50 tracking-wide mt-2">Direct. Traceable. Transparent.</p>
+            <p className="text-sm text-charcoal/50 tracking-wide mt-2">Direct. Transparent. Traditional.</p>
           </Reveal>
 
           <div className="space-y-16">

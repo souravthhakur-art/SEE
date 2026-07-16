@@ -45,11 +45,8 @@ export default function HomePage() {
             <p className="text-lg md:text-xl text-ivory/90 max-w-2xl mb-3 leading-relaxed text-balance">
               Exceptional tea, honey, preserves and pantry staples from the Himalayan foothills.
             </p>
-            {/*
-              Every tin and jar is traceable to its source — harvest date, estate, elevation, and batch — so you always know exactly where your food comes from.
-            */}
             <p className="text-sm md:text-base text-ivory/70 max-w-xl mb-8 leading-relaxed">
-              Sourced directly from trusted growers and women-led groups, with every batch traceable to its origin.
+              Sourced directly from trusted growers and women-led groups, with detailed batch provenance.
             </p>
             <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
               <Link href="/shop" className="btn-primary w-full sm:w-auto">
@@ -66,7 +63,7 @@ export default function HomePage() {
             <ul className="mt-8 flex max-w-2xl flex-wrap gap-x-5 gap-y-2 text-[10px] md:text-[11px] tracking-[0.12em] uppercase text-ivory/75" aria-label="Palum Dhara commitments">
               <li>Direct from Himachal Pradesh</li>
               <li>Small Batch</li>
-              <li>Traceable Origins</li>
+              <li>Detailed Provenance</li>
               <li>Women-led SHGs</li>
             </ul>
           </div>

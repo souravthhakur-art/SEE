@@ -144,7 +144,7 @@ const trustItems = [
     line: "Sourced by hand, shipped from Palampur. No middlemen.",
   },
   {
-    title: "Traceable to Source",
+    title: "Detailed Provenance",
     line: "Harvest date, estate, elevation and batch on every tin.",
   },
 ];
