@@ -17,7 +17,7 @@ export default function ProductCard({ product }: ProductCardProps) {
       className="group block rounded-sm transition-all duration-500 ease-out hover:-translate-y-1 hover:warm-card-hover focus-visible:outline-none"
     >
       {/* Image */}
-      <div className="relative aspect-[4/5] mb-4 overflow-hidden warm-card bg-ivory-dark">
+      <div className="relative w-full aspect-[4/5] mb-4 overflow-hidden warm-card bg-ivory-dark">
         <Image
           src={product.image || "/images/placeholder-product.jpg"}
           alt={product.name}

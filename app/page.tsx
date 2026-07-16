@@ -20,68 +20,25 @@ export default function HomePage() {
     <>
       {/* HERO */}
       <section className="relative min-h-[86svh] md:min-h-[88vh] flex items-center overflow-hidden">
-        {/* Background — Kangra Valley tea gardens, cropped toward the
-            terraces (not the snow peak) and colour-graded warmer and less
-            saturated so it reads as food provenance, not a travel poster. */}
+        {/* Background — Natural vibrant Kangra Valley tea gardens */}
         <div className="absolute inset-0 overflow-hidden">
           <Image
             src="/images/hero-kangra-valley.jpg"
             alt="Misty tea gardens of Kangra Valley at dawn with the Dhauladhar range"
             fill
-            className="object-cover object-[center_64%] saturate-[0.82] sepia-[0.06] contrast-[1.04] brightness-[0.96] hero-zoom"
+            className="object-cover object-center hero-zoom"
             sizes="100vw"
             priority
           />
         </div>
-        {/* Colour grade — warmer and lighter than a flat dark wash; legibility
-            is concentrated bottom-left where the copy sits, and the tea
-            terraces stay readable through the mid-ground. */}
-        <div className="absolute inset-0 bg-[linear-gradient(120deg,_rgba(12,28,20,0.85)_0%,_rgba(18,38,27,0.66)_36%,_rgba(32,50,37,0.34)_62%,_rgba(58,50,36,0.20)_100%)]" />
-        <div className="absolute inset-0 opacity-25 bg-[radial-gradient(ellipse_at_78%_18%,_rgba(214,168,92,0.30),_transparent_55%)]" />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/8 to-transparent" />
-
-        {/* Fine paper-grain texture — a restrained, tactile finish in place
-            of a flat colour filter. Pure CSS/SVG, no new asset. */}
-        <div
-          className="absolute inset-0 z-[1] opacity-[0.05] mix-blend-overlay pointer-events-none"
-          style={{
-            backgroundImage:
-              "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E\")",
-            backgroundRepeat: "repeat",
-          }}
-          aria-hidden="true"
-        />
-
-        {/* Guler-inspired line landscape — a faint hand-drawn layer over the
-            lower portion of the hero. Masked so the etched hills, village and
-            tea gardens rise from the base of the frame without sitting behind
-            the headline. Kept subtle so it reads as craft, not decoration. */}
-        <div
-          className="absolute inset-0 z-[1] text-ivory pointer-events-none"
-          style={{
-            opacity: 0.28,
-            WebkitMaskImage:
-              "linear-gradient(to top, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.55) 38%, rgba(0,0,0,0) 62%)",
-            maskImage:
-              "linear-gradient(to top, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.55) 38%, rgba(0,0,0,0) 62%)",
-          }}
-          aria-hidden="true"
-        >
-          {/* Using <img> for a decorative SVG overlay (no Image optimization needed). */}
-          <img
-            src="/decor/hero-landscape.svg"
-            alt=""
-            className="w-full h-full object-cover object-bottom"
-          />
-        </div>
+        {/* Simple elegant overlay for excellent white text readability */}
+        <div className="absolute inset-0 bg-black/45 z-[2]" />
 
         <div className="relative z-10 section-padding w-full pt-28 pb-20 md:pt-32 md:pb-24">
           <div className="max-w-3xl">
-            <div className="flex items-center gap-2.5 text-gold-light/95 text-xs tracking-[0.25em] uppercase mb-4 font-body">
-              <span>EST. 2026</span>
-              <span className="w-1.5 h-1.5 rounded-full bg-gold-light/40" />
-              <span>PALAMPUR, HIMACHAL PRADESH</span>
-            </div>
+            {/*
+              Est. 2026 · Palampur, Himachal Pradesh
+            */}
             <h1 className="font-heading text-5xl md:text-7xl lg:text-8xl text-ivory mb-5 leading-[1.05] text-balance">
               Bringing Himachal Pradesh<br />to Your Home.
             </h1>

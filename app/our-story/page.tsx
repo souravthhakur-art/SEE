@@ -12,18 +12,12 @@ export const metadata: Metadata = {
 export default function OurStoryPage() {
   return (
     <>
-      {/* Editorial Header */}
-      <section className="section-padding pt-24 md:pt-32 pb-16">
-        <div className="max-w-4xl mx-auto text-center">
+      {/* Header */}
+      <section className="section-padding pt-28 pb-12">
+        <div className="max-w-3xl mx-auto">
           <Reveal>
-            <p className="label-ornate justify-center mb-4">
-              <LeafBullet /> Heritage & Purpose
-            </p>
-            <h1 className="heading-lg mb-6 tracking-tight">From Palampur, With Care</h1>
-            <Divider className="ornament-divider mt-6 mb-10 h-5 w-64" />
-            <p className="text-xl md:text-2xl font-heading text-forest italic leading-relaxed max-w-2xl mx-auto text-balance">
-              &ldquo;In the shadow of the high peaks, life slows down. The mountain rivers flow pure, and the fields yield flavors shaped by the mist.&rdquo;
-            </p>
+            <p className="label mb-4">Our Story</p>
+            <h1 className="heading-lg mb-8">From Palampur, With Care</h1>
           </Reveal>
         </div>
       </section>

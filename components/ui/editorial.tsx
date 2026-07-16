@@ -51,7 +51,7 @@ export function EditorialImage({
 }: EditorialImageProps) {
   return (
     <figure className={className}>
-      <div className={`relative ${aspectClass[aspect]} overflow-hidden bg-ivory-dark warm-card`}>
+      <div className={`relative w-full ${aspectClass[aspect]} overflow-hidden bg-ivory-dark warm-card`}>
         <Image
           src={src}
           alt={alt}

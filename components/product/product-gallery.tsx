@@ -26,7 +26,7 @@ export default function ProductGallery({ product }: ProductGalleryProps) {
   return (
     <div className="space-y-4">
       {/* Main Image — crossfade between active images instead of a hard swap */}
-      <div className="relative aspect-[4/5] bg-ivory-dark overflow-hidden">
+      <div className="relative w-full aspect-[4/5] bg-ivory-dark overflow-hidden">
         <AnimatePresence initial={false} mode="sync">
           <motion.div
             key={activeIndex}
