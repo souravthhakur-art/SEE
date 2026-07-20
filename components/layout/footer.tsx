@@ -20,11 +20,7 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-8">
           {/* Brand */}
           <div className="lg:col-span-1">
-            <div className="mb-4">
-              <Link href="/" aria-label="Palum Dhara Home">
-                <Logo variant="footer" className="h-10 md:h-12" />
-              </Link>
-            </div>
+            <Logo variant="footer" className="h-10 mb-4" />
             <p className="text-sm text-ivory/60 leading-relaxed max-w-xs">
               Premium Kangra tea and curated Himalayan pantry, delivered from the
               mist-covered slopes of the Dhauladhar range to your doorstep.

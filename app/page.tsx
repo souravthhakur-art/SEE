@@ -19,31 +19,29 @@ export default function HomePage() {
   return (
     <>
       {/* HERO */}
-      <section className="relative min-h-[90svh] md:min-h-[88vh] flex items-center overflow-hidden">
+      <section className="relative min-h-[66svh] md:min-h-[72vh] flex items-center overflow-hidden">
         {/* Background — Kangra Valley tea gardens, cropped toward the
             terraces (not the snow peak) and colour-graded warmer and less
             saturated so it reads as food provenance, not a travel poster. */}
         <div className="absolute inset-0 overflow-hidden">
           <Image
-            src="/images/hero-kangra-valley.jpg"
-            alt="Misty tea gardens of Kangra Valley at dawn with the Dhauladhar range"
+            src="/images/hero-illustration.jpg"
+            alt="Artistic hand-painted illustration of Kangra tea gardens and Himalayan honey harvesting"
             fill
-            className="object-cover object-[48%_60%] md:object-[52%_64%] saturate-[0.82] sepia-[0.06] contrast-[1.04] brightness-[0.96] hero-zoom"
+            className="object-cover object-center hero-zoom brightness-[0.85] contrast-[1.02] saturate-[0.95]"
             sizes="100vw"
             priority
+            referrerPolicy="no-referrer"
           />
         </div>
-        {/* A subtle local radial gradient centered behind the text to guarantee contrast, with a faint top scrim for the header, keeping the tea gardens and mountains bright and detailed */}
+        {/* Colour grade — premium subtle dark wash to keep the hand-painted illustration
+            colors vivid while ensuring absolute legibility of the white text. */}
+        <div className="absolute inset-0 bg-gradient-to-b from-black/35 via-black/45 to-black/65 z-[1]" />
+        <div className="absolute inset-0 opacity-15 bg-[radial-gradient(ellipse_at_78%_18%,_rgba(214,168,92,0.25),_transparent_55%)] z-[1]" />
         <div 
           className="absolute inset-0 z-[2]" 
           style={{
-            background: "radial-gradient(circle at center, rgba(12, 28, 20, 0.50) 0%, rgba(12, 28, 20, 0.28) 45%, rgba(12, 28, 20, 0.08) 75%, rgba(12, 28, 20, 0.03) 100%)"
-          }}
-        />
-        <div 
-          className="absolute inset-0 z-[2]" 
-          style={{
-            background: "linear-gradient(to bottom, rgba(0, 0, 0, 0.22) 0%, transparent 20%)"
+            background: "linear-gradient(to bottom, rgba(0, 0, 0, 0.25) 0%, transparent 20%)"
           }}
         />
 
@@ -82,37 +80,49 @@ export default function HomePage() {
           />
         </div>
 
-        <div className="relative z-10 section-padding w-full py-24 md:py-36 flex items-center justify-center max-w-7xl mx-auto">
+        <div className="relative z-10 section-padding w-full py-16 md:py-24 flex items-center justify-center max-w-7xl mx-auto">
           <div className="max-w-2xl text-center flex flex-col items-center justify-center">
-            <p className="text-[10px] md:text-xs uppercase tracking-[0.25em] text-stone-300/80 mb-4 font-body font-semibold">
+            <p className="text-[10px] md:text-xs uppercase tracking-[0.25em] text-ivory/90 mb-4 font-body font-semibold drop-shadow-[0_1px_2px_rgba(0,0,0,0.3)]">
               Bring the Himalayas to Your Home.
             </p>
-            <h1 className="font-heading text-[32px] sm:text-4xl md:text-6xl lg:text-7xl text-ivory mb-6 leading-[1.15] md:leading-[1.12] tracking-tight text-balance font-medium">
+            <h1 className="font-heading text-[32px] sm:text-4xl md:text-6xl lg:text-7xl text-ivory mb-6 leading-[1.15] md:leading-[1.12] tracking-tight text-balance font-medium drop-shadow-[0_2px_10px_rgba(0,0,0,0.4)]">
               Authentic Flavours of the Himalayas.
             </h1>
-            <p className="text-xs sm:text-sm md:text-base text-stone-300/90 max-w-lg mx-auto mb-10 leading-relaxed tracking-wide font-body font-light">
+            <p className="text-xs sm:text-sm md:text-base text-stone-200/95 max-w-lg mx-auto mb-10 leading-relaxed tracking-wide font-body font-light drop-shadow-[0_1.5px_4px_rgba(0,0,0,0.35)]">
               Tea, honey and pantry essentials sourced directly from trusted farmers and producers across Himachal Pradesh.
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-3.5 sm:gap-5 w-full sm:w-auto max-w-xs sm:max-w-none mx-auto">
               <Link 
                 href="/shop" 
-                className="btn-primary w-full sm:w-auto min-w-[190px] px-7 py-4 md:py-3.5 text-xs tracking-[0.2em] font-body font-semibold uppercase text-center"
+                className="btn-primary w-full sm:w-auto min-w-[190px] px-7 py-4 md:py-3.5 text-xs tracking-[0.2em] font-body font-semibold uppercase text-center shadow-[0_4px_20px_rgba(0,0,0,0.25)] hover:shadow-[0_4px_25px_rgba(212,168,75,0.15)]"
               >
                 SHOP COLLECTION
                 <ArrowRight className="w-3.5 h-3.5 ml-1.5" strokeWidth={1.5} />
               </Link>
               <Link
                 href="/subscriptions"
-                className="inline-flex items-center justify-center w-full sm:w-auto min-w-[190px] px-7 py-4 md:py-3.5 bg-ivory/5 hover:bg-ivory/10 backdrop-blur-[2px] border border-stone-300/25 hover:border-ivory/40 text-stone-300/90 hover:text-ivory font-body text-xs tracking-[0.2em] font-medium uppercase transition-all duration-300 text-center shadow-[0_4px_12px_rgba(0,0,0,0.1)] hover:shadow-[0_4px_20px_rgba(212,168,75,0.08)] rounded-sm"
+                className="inline-flex items-center justify-center w-full sm:w-auto min-w-[190px] px-7 py-4 md:py-3.5 bg-ivory/5 hover:bg-ivory/10 backdrop-blur-[2px] border border-stone-300/25 hover:border-ivory/40 text-stone-300/90 hover:text-ivory font-body text-xs tracking-[0.2em] font-medium uppercase transition-all duration-300 text-center shadow-[0_4px_12px_rgba(0,0,0,0.25)] hover:shadow-[0_4px_20px_rgba(212,168,75,0.08)] rounded-sm"
               >
                 SUBSCRIBE NOW
               </Link>
             </div>
-            <ul className="mt-14 flex max-w-2xl flex-wrap justify-center gap-x-6 gap-y-3 text-[10px] md:text-[11px] tracking-[0.15em] uppercase text-stone-300/60" aria-label="Palum Dhara commitments">
-              <li>Direct from Himachal Pradesh</li>
-              <li>Small Batch</li>
-              <li>Traceable Origins</li>
-              <li>Women-led SHGs</li>
+            <ul className="mt-10 flex max-w-2xl flex-wrap justify-center items-center gap-x-6 gap-y-3 text-[10px] md:text-xs tracking-[0.18em] uppercase text-ivory font-medium font-body drop-shadow-[0_1px_3px_rgba(0,0,0,0.4)]" aria-label="Palum Dhara commitments">
+              <li className="flex items-center gap-2">
+                <span className="w-1 h-1 rounded-full bg-gold-light/90" />
+                Direct from Himachal Pradesh
+              </li>
+              <li className="flex items-center gap-2">
+                <span className="w-1 h-1 rounded-full bg-gold-light/90" />
+                Small Batch
+              </li>
+              <li className="flex items-center gap-2">
+                <span className="w-1 h-1 rounded-full bg-gold-light/90" />
+                Traceable Origins
+              </li>
+              <li className="flex items-center gap-2">
+                <span className="w-1 h-1 rounded-full bg-gold-light/90" />
+                Women-led SHGs
+              </li>
             </ul>
           </div>
         </div>
@@ -124,11 +134,11 @@ export default function HomePage() {
 
       <TrustBar />
 
-      <section className="section-padding py-24 md:py-32">
+      <section className="section-padding py-16 md:py-20">
         <div className="max-w-7xl mx-auto">
-          <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12 md:mb-16">
+          <div className="flex items-end justify-between gap-6 mb-8 md:mb-10">
             <div>
-              <p className="label-ornate mb-4"><LeafBullet /> Shop the Collection</p>
+              <p className="label-ornate mb-3"><LeafBullet /> Shop the Collection</p>
               <h2 className="heading-md">From Himachal Pradesh, for your pantry</h2>
             </div>
             <Link href="/shop" className="hidden md:inline-flex items-center gap-2 text-sm tracking-wide text-forest hover:text-forest-light transition-colors">
@@ -138,7 +148,7 @@ export default function HomePage() {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6 md:gap-7">
             {allProducts.map((product) => <ProductCard key={product.id} product={product} />)}
           </div>
-          <div className="mt-10 text-center md:hidden">
+          <div className="mt-7 text-center md:hidden">
             <Link href="/shop" className="inline-flex items-center gap-2 text-sm tracking-wide text-forest">View all products <ArrowRight className="w-4 h-4" strokeWidth={1.5} /></Link>
           </div>
         </div>
@@ -152,7 +162,7 @@ export default function HomePage() {
           The name Palum Dhara comes from the local words for water and
           stream. This section roots the brand in place before any product
           is shown, so the collection below reads as "collected from here". */}
-      <section className="section-padding py-24 md:py-36">
+      <section className="section-padding py-20 md:py-28">
         <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
           <Reveal>
             <EditorialImage
@@ -188,7 +198,7 @@ export default function HomePage() {
       </PullQuote>
 
       {/* WHY YOU'LL LOVE PALUM DHARA? */}
-      <section className="bg-forest/[0.03] section-padding py-24 md:py-36">
+      <section className="bg-forest/5 section-padding py-20 md:py-28">
         <div className="max-w-7xl mx-auto">
           <Reveal className="text-center mb-12 md:mb-16">
             <p className="label-ornate mb-3 justify-center"><LeafBullet /> Why Palum Dhara?</p>
@@ -219,7 +229,7 @@ export default function HomePage() {
       </section>
 
       {/* OUR REGIONS */}
-      <section className="bg-forest/[0.03] border-t border-forest/5 section-padding py-24 md:py-36">
+      <section className="bg-forest/5 section-padding py-20 md:py-28">
         <div className="max-w-7xl mx-auto">
           <Reveal className="text-center mb-12 md:mb-16">
             <p className="label-ornate mb-3 justify-center"><LeafBullet /> Our Regions</p>
@@ -260,7 +270,7 @@ export default function HomePage() {
           pantry staples behind the collection. No posed or AI-generated
           people; every image here is a real product, landscape or still-life
           asset, ready to be swapped for verified documentary photography. */}
-      <section className="bg-forest/[0.03] border-t border-forest/5 section-padding py-24 md:py-36">
+      <section className="bg-forest/5 section-padding py-20 md:py-28">
         <div className="max-w-7xl mx-auto">
           <Reveal className="mb-12 md:mb-16">
             <p className="label-ornate mb-3"><LeafBullet /> Field Notes</p>

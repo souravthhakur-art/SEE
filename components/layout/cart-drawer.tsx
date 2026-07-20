@@ -36,7 +36,7 @@ export default function CartDrawer({ floating = false }: CartDrawerProps) {
       {/* Cart Toggle */}
       <button
         onClick={() => setOpen(true)}
-        className={`relative p-3 md:p-2 transition-all duration-300 ${
+        className={`relative p-3 md:p-2 transition-colors ${
           floating ? "text-ivory/85 hover:text-ivory" : "text-stone-900 hover:text-forest"
         }`}
         aria-label={`Cart with ${count} items`}
@@ -113,6 +113,7 @@ export default function CartDrawer({ floating = false }: CartDrawerProps) {
                         fill
                         className="object-cover"
                         sizes="80px"
+                        referrerPolicy="no-referrer"
                       />
                     </Link>
 

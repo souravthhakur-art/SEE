@@ -5,9 +5,8 @@ import { usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
 import { Menu, X, ChevronDown, User } from "lucide-react";
 import CartDrawer from "@/components/layout/cart-drawer";
-import { useSession, authClient } from "@/lib/auth-client";
 import Logo from "@/components/layout/logo";
-import { motion, AnimatePresence } from "motion/react";
+import { useSession, authClient } from "@/lib/auth-client";
 
 const navLinks = [
   { href: "/shop", label: "Shop", primary: true },
@@ -15,14 +14,6 @@ const navLinks = [
   { href: "/journal", label: "Journal" },
   { href: "/our-story", label: "About" },
   { href: "/contact", label: "Contact" },
-];
-
-const announcementMessages = [
-  "Free Shipping on Orders Above ₹999",
-  "Ships Across India",
-  "Fresh Seasonal Harvest",
-  "Source Transparency",
-  "Complimentary Gift Wrapping Above ₹2,500",
 ];
 
 export default function Navigation() {
@@ -38,62 +29,28 @@ export default function Navigation() {
   const [scrolled, setScrolled] = useState(!isHome);
   const floating = isHome && !scrolled && !isOpen;
 
-  const [currentMsgIndex, setCurrentMsgIndex] = useState(0);
-
   useEffect(() => {
     if (!isHome) {
       setScrolled(true);
       return;
     }
-    setScrolled(window.scrollY > 80);
-    const onScroll = () => setScrolled(window.scrollY > 80);
+    setScrolled(window.scrollY > 64);
+    const onScroll = () => setScrolled(window.scrollY > 64);
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, [isHome]);
 
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setCurrentMsgIndex((prev) => (prev + 1) % announcementMessages.length);
-    }, 5000); // Elegant 5s rotation
-    return () => clearInterval(timer);
-  }, []);
-
   return (
     <>
       <header
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ease-in-out ${
+        className={`fixed top-0 left-0 right-0 z-50 transition-colors duration-300 ${
           floating
             ? "bg-transparent border-b border-transparent"
-            : "bg-ivory/90 backdrop-blur-md border-b border-forest/10 shadow-[0_4px_24px_-18px_rgba(23,55,40,0.25)]"
+            : "bg-ivory/95 backdrop-blur-md border-b border-forest/10 shadow-[0_8px_24px_-22px_rgba(23,55,40,0.45)]"
         }`}
       >
-        {/* Soft dark top scrim for readable floating state */}
-        <div
-          className={`absolute inset-0 bg-gradient-to-b from-black/50 via-black/20 to-transparent -z-10 pointer-events-none transition-opacity duration-500 ${
-            floating ? "opacity-100" : "opacity-0"
-          }`}
-        />
-
-        {/* Slim Forest Green Announcement Bar */}
-        <div className="bg-forest text-ivory text-[9px] md:text-[10px] tracking-[0.18em] uppercase font-body font-semibold text-center relative overflow-hidden h-7 md:h-8 flex items-center justify-center border-b border-forest-light/10">
-          <div className="relative w-full h-full flex items-center justify-center">
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={currentMsgIndex}
-                initial={{ opacity: 0, y: 8 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -8 }}
-                transition={{ duration: 0.35, ease: "easeInOut" }}
-                className="absolute text-center px-4"
-              >
-                {announcementMessages[currentMsgIndex]}
-              </motion.div>
-            </AnimatePresence>
-          </div>
-        </div>
-
         <div className="section-padding">
-          <div className={`flex items-center justify-between transition-all duration-500 ease-in-out ${scrolled ? "h-11 md:h-13.5" : "h-14 md:h-17"}`}>
+          <div className="flex items-center justify-between h-16 md:h-[4.5rem]">
             {/* Logo */}
             <Link href="/" className="flex items-center gap-2 group" aria-label="Palum Dhara Home">
               <Logo floating={floating} className={scrolled ? "h-8 md:h-9.5" : "h-10 md:h-11.5"} />

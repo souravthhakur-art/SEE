@@ -59,6 +59,7 @@ export function EditorialImage({
           className="object-cover transition-transform duration-[1200ms] ease-out hover:scale-[1.03]"
           sizes={sizes}
           priority={priority}
+          referrerPolicy="no-referrer"
         />
       </div>
       {(caption || credit) && (
