@@ -2,41 +2,31 @@
 
 import { usePathname } from "next/navigation"
 import type { ReactNode } from "react"
+import Navigation from "./navigation"
+import Footer from "./footer"
+import WhatsAppFloat from "./whatsapp-float"
 
 interface SiteChromeProps {
   children: ReactNode
 }
 
-// Root layout.tsx currently renders <Navigation /> {children} <Footer />
-// <WhatsAppFloat /> for every route (see 04-architecture.md). That's
-// correct for the public site, but wrong for /admin — the admin shell
-// has its own sidebar/header and shouldn't sit inside the marketing
-// nav/footer/WhatsApp float as well.
-//
-// This component isn't wired into anything by this change (see
-// CHANGES.md — I don't have the actual app/layout.tsx source to safely
-// edit it). To use it: in the root layout, wrap the three public-chrome
-// components in <SiteChrome> instead of rendering them unconditionally,
-// e.g.:
-//
-//   <SiteChrome>
-//     <Navigation />
-//     {children}
-//     <Footer />
-//     <WhatsAppFloat />
-//   </SiteChrome>
-//
-// and move {children} so it always renders outside the conditional if
-// you'd rather keep the public chrome/children split explicit — the
-// only requirement is that Navigation/Footer/WhatsAppFloat don't render
-// under /admin.
+// Root layout.tsx now wraps everything inside <SiteChrome>{children}</SiteChrome>.
+// If it's an admin route, it bypasses the public layout features entirely.
+// Otherwise, it wraps the children in the beautiful public header, footer, and floating buttons.
 export function SiteChrome({ children }: SiteChromeProps) {
   const pathname = usePathname()
   const isAdminRoute = pathname?.startsWith("/admin") ?? false
 
   if (isAdminRoute) {
-    return null
+    return <>{children}</>
   }
 
-  return <>{children}</>
+  return (
+    <div className="flex min-h-screen flex-col bg-ivory text-charcoal font-body antialiased selection:bg-gold-light/20 selection:text-charcoal" id="site-chrome-wrapper">
+      <Navigation />
+      <main className="flex-1" id="main-content-area">{children}</main>
+      <Footer />
+      <WhatsAppFloat />
+    </div>
+  )
 }
