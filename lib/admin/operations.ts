@@ -4,6 +4,21 @@ import { OrderStatus, ProductStatus } from "@prisma/client"
 // ==========================================
 // MODULE 10 — AUDIT LOGS
 // ==========================================
+export interface AuditLog {
+  id: string
+  action: string
+  entityType: string
+  entityId: string
+  notes: string
+  userId: string
+  userName: string
+  oldValue: any
+  newValue: any
+  createdAt: Date
+}
+
+const auditLogs: AuditLog[] = []
+
 export async function logAudit(
   action: string,
   entityType: string,
@@ -15,21 +30,27 @@ export async function logAudit(
   newValue?: any
 ) {
   try {
-    return await prisma.auditLog.create({
-      data: {
-        action,
-        entityType,
-        entityId,
-        notes,
-        userId: userId || "system",
-        userName: userName || "System Engine",
-        oldValue: oldValue ? JSON.parse(JSON.stringify(oldValue)) : undefined,
-        newValue: newValue ? JSON.parse(JSON.stringify(newValue)) : undefined,
-      },
-    })
+    const log: AuditLog = {
+      id: `audit-${Math.random().toString(36).substr(2, 9)}`,
+      action,
+      entityType,
+      entityId,
+      notes,
+      userId: userId || "system",
+      userName: userName || "System Engine",
+      oldValue: oldValue ? JSON.parse(JSON.stringify(oldValue)) : null,
+      newValue: newValue ? JSON.parse(JSON.stringify(newValue)) : null,
+      createdAt: new Date(),
+    }
+    auditLogs.unshift(log)
+    return log
   } catch (err) {
     console.error("Audit log failed:", err)
   }
+}
+
+export function getAuditLogs() {
+  return auditLogs
 }
 
 // ==========================================

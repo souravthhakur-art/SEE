@@ -174,10 +174,7 @@ export async function getExportDataAction(type: "revenue" | "orders" | "customer
 export async function getAuditLogsAction() {
   await requireAdmin()
   try {
-    const logs = await prisma.auditLog.findMany({
-      orderBy: { createdAt: "desc" },
-      take: 100,
-    })
+    const logs = ops.getAuditLogs()
     return { success: true, data: logs }
   } catch (err: any) {
     return { success: false, error: err.message || "Failed to fetch audit logs" }
