@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Instagram, MessageCircle, Mail, Phone } from "lucide-react";
+import Logo from "@/components/layout/logo";
 
 export default function Footer() {
   return (
@@ -19,9 +20,14 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-8">
           {/* Brand */}
           <div className="lg:col-span-1">
-            <h3 className="font-heading text-3xl text-ivory mb-4">Palum Dhara</h3>
+            <div className="mb-4">
+              <Link href="/" aria-label="Palum Dhara Home">
+                <Logo variant="footer" className="h-10 md:h-12" />
+              </Link>
+            </div>
             <p className="text-sm text-ivory/60 leading-relaxed max-w-xs">
-              Bringing the Himalayas Home. Premium Kangra tea and curated Himalayan pantry, delivered from the mist-covered slopes of Himachal Pradesh.
+              Premium Kangra tea and curated Himalayan pantry, delivered from the
+              mist-covered slopes of the Dhauladhar range to your doorstep.
             </p>
           </div>
 

@@ -10,12 +10,6 @@ import {
   Mail,
   BarChart3,
   Settings,
-  Boxes,
-  Warehouse,
-  Truck,
-  FileText,
-  History,
-  Calendar,
   type LucideIcon,
 } from "lucide-react"
 
@@ -47,17 +41,6 @@ export const ADMIN_NAV_GROUPS: AdminNavGroup[] = [
       { label: "Products", href: "/admin/products", icon: Package },
       { label: "Categories & Collections", href: "/admin/categories", icon: Tag },
       { label: "Pantry Memberships", href: "/admin/subscriptions", icon: Repeat },
-    ],
-  },
-  {
-    heading: "Operations",
-    items: [
-      { label: "Inventory", href: "/admin/inventory", icon: Boxes },
-      { label: "Warehouse", href: "/admin/warehouse", icon: Warehouse },
-      { label: "Pantry Ops", href: "/admin/pantry-ops", icon: Calendar },
-      { label: "Shipping Rules", href: "/admin/shipping", icon: Truck },
-      { label: "Invoices", href: "/admin/invoices", icon: FileText },
-      { label: "Audit Logs", href: "/admin/audit-logs", icon: History },
     ],
   },
   {

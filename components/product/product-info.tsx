@@ -87,7 +87,7 @@ export default function ProductInfo({ product }: ProductInfoProps) {
               </button>
               <Link
                 href={`/checkout?mode=buy-now&slug=${product.slug}&qty=${quantity}`}
-                className="btn-outline w-full text-center block"
+                className="block w-full px-8 py-3 border-2 border-forest text-forest text-sm tracking-widest uppercase text-center hover:bg-forest hover:text-ivory transition-colors"
               >
                 Buy Now
               </Link>
@@ -95,7 +95,7 @@ export default function ProductInfo({ product }: ProductInfoProps) {
           ) : (
             <button
               disabled
-              className="w-full btn-outline border-charcoal/10 text-charcoal/40 bg-charcoal/5 cursor-not-allowed py-3.5"
+              className="w-full px-8 py-3 bg-charcoal/20 text-charcoal/40 text-sm tracking-widest uppercase cursor-not-allowed"
             >
               Out of Stock
             </button>
@@ -147,17 +147,17 @@ export default function ProductInfo({ product }: ProductInfoProps) {
 
           {/* Buttons */}
           {product.inStock ? (
-            <div className="flex gap-2.5">
+            <div className="flex gap-2">
               <button
                 onClick={handleAddToCart}
                 disabled={adding}
-                className="btn-outline flex-1 px-4 py-2.5 text-[11px] disabled:opacity-60"
+                className="flex-1 px-5 py-3 border border-forest text-forest text-xs tracking-widest uppercase hover:bg-forest hover:text-ivory transition-colors disabled:opacity-60"
               >
                 {adding ? "Adding..." : "Add to Cart"}
               </button>
               <Link
                 href={`/checkout?mode=buy-now&slug=${product.slug}&qty=${quantity}`}
-                className="btn-primary flex-1 px-4 py-2.5 text-[11px] text-center"
+                className="flex-1 px-6 py-3 bg-forest text-ivory text-xs tracking-widest uppercase text-center hover:bg-forest-light transition-colors"
               >
                 Buy Now
               </Link>
@@ -165,7 +165,7 @@ export default function ProductInfo({ product }: ProductInfoProps) {
           ) : (
             <button
               disabled
-              className="w-full btn-outline border-charcoal/10 text-charcoal/40 bg-charcoal/5 cursor-not-allowed py-2.5 text-[11px]"
+              className="w-full px-8 py-3 bg-charcoal/20 text-charcoal/40 text-xs tracking-widest uppercase cursor-not-allowed"
             >
               Out of Stock
             </button>

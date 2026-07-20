@@ -158,7 +158,6 @@ model Product {
   collections          CollectionProduct[]
   orderItems           OrderItem[]
   pantryItems          PantryItem[]
-  stockAdjustments     StockAdjustment[]
 
   @@index([status])
   @@index([categoryId])
@@ -284,13 +283,6 @@ enum OrderStatus {
   shipped
   delivered
   cancelled
-  pending
-  confirmed
-  picking
-  packing
-  ready_to_dispatch
-  dispatched
-  returned
 }
 
 model Order {
@@ -322,7 +314,6 @@ model Order {
   promotion        Promotion?           @relation(fields: [promotionId], references: [id], onDelete: SetNull)
   pantrySchedules  PantrySchedule[]
   pantryDeliveries PantryDelivery[]
-  invoice          Invoice?
 
   @@index([userId])
   @@index([status])
@@ -562,66 +553,4 @@ model PantryHistory {
   pantry             Pantry           @relation(fields: [pantryId], references: [id], onDelete: Cascade)
 
   @@index([pantryId])
-}
-
-model AuditLog {
-  id          String   @id @default(cuid())
-  action      String   // e.g. "admin_action", "inventory_change", "price_change", "order_change", "pantry_change", "membership_change"
-  entityType  String   // e.g. "product", "order", "pantry", "coupon", "membership"
-  entityId    String
-  userId      String?
-  userName    String?
-  oldValue    Json?
-  newValue    Json?
-  notes       String?
-  createdAt   DateTime @default(now())
-
-  @@index([action])
-  @@index([entityType, entityId])
-}
-
-model StockAdjustment {
-  id          String   @id @default(cuid())
-  productId   String
-  quantity    Int      // positive for restock, negative for deduction
-  type        String   // "restock", "audit_adjustment", "order_reservation", "order_fulfilled", "damage", "returned"
-  notes       String?
-  adjustedBy  String?
-  createdAt   DateTime @default(now())
-  product     Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
-
-  @@index([productId])
-  @@index([type])
-}
-
-model ShippingRule {
-  id            String   @id @default(cuid())
-  name          String
-  type          String   // "flat", "free", "zone", "weight"
-  minOrderValue Int      @default(0)
-  fee           Int      @default(0)
-  zoneName      String?
-  states        String[]
-  weightLimit   Int?
-  active        Boolean  @default(true)
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
-}
-
-model Invoice {
-  id            String   @id @default(cuid())
-  invoiceNumber String   @unique
-  orderId       String?  @unique
-  pantryId      String?
-  type          String   // "order" or "pantry"
-  subtotal      Int
-  shippingFee   Int      @default(0)
-  discount      Int      @default(0)
-  tax           Int      @default(0)
-  taxBreakdown  Json
-  grandTotal    Int
-  pdfUrl        String?
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
-  order         Order?   @relation(fields: [orderId], references: [id], onDelete: SetNull)
 }

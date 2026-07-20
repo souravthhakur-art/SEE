@@ -70,29 +70,18 @@
 }
 
 @layer components {
-  /* Buttons — refined for a premium, tactile, luxury feel.
-     Slimmer, rounded, elegant, with beautiful hover transitions and subtle shadows. */
+  /* Buttons — refined for a premium, tactile feel. Colors unchanged.
+     Added: 2px radius (softens without going modern), extra horizontal
+     padding, subtle hover shadow, active press, accessible focus ring. */
   .btn-primary {
-    @apply inline-flex items-center justify-center gap-2 rounded-full px-7 py-3 bg-forest text-ivory font-body text-xs tracking-[0.22em] uppercase font-semibold transition-all duration-500 ease-out hover:bg-forest-light hover:-translate-y-0.5 active:translate-y-0 hover:shadow-[0_12px_24px_-8px_rgba(23,55,40,0.3)];
+    @apply inline-flex items-center justify-center gap-2 rounded-sm px-10 py-4 bg-forest text-ivory font-body text-sm tracking-widest uppercase transition-all duration-300 hover:bg-forest-light hover:shadow-[0_12px_28px_-12px_rgba(23,55,40,0.45)] active:translate-y-px;
   }
-  /* Arrow inside a .btn-primary slides 4px on hover */
+  /* Arrow inside a .btn-primary slides 6px on hover — Apple-style tactile cue */
   .btn-primary svg {
-    transition: transform 400ms cubic-bezier(0.16, 1, 0.3, 1);
+    transition: transform 300ms cubic-bezier(0.16, 1, 0.3, 1);
   }
   .btn-primary:hover svg {
-    transform: translateX(4px);
-  }
-
-  .btn-outline {
-    @apply inline-flex items-center justify-center gap-2 rounded-full px-7 py-3 border border-forest/20 text-forest font-body text-xs tracking-[0.22em] uppercase font-semibold transition-all duration-500 ease-out hover:border-forest hover:bg-forest/5 hover:-translate-y-0.5 active:translate-y-0;
-  }
-
-  .btn-outline-ivory {
-    @apply inline-flex items-center justify-center gap-2 rounded-full px-7 py-3 border border-ivory/30 text-ivory font-body text-xs tracking-[0.22em] uppercase font-semibold transition-all duration-500 ease-out hover:border-ivory hover:bg-ivory/10 hover:-translate-y-0.5 active:translate-y-0;
-  }
-
-  .btn-secondary {
-    @apply inline-flex items-center justify-center gap-2 rounded-full px-7 py-3 bg-ivory border border-forest/10 text-forest font-body text-xs tracking-[0.22em] uppercase font-semibold transition-all duration-500 ease-out hover:bg-forest hover:text-ivory hover:border-forest hover:-translate-y-0.5 active:translate-y-0 hover:shadow-[0_12px_24px_-8px_rgba(23,55,40,0.15)];
+    transform: translateX(6px);
   }
 
   .section-padding {

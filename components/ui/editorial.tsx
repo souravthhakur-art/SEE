@@ -51,7 +51,7 @@ export function EditorialImage({
 }: EditorialImageProps) {
   return (
     <figure className={className}>
-      <div className={`relative w-full ${aspectClass[aspect]} overflow-hidden bg-ivory-dark warm-card`}>
+      <div className={`relative ${aspectClass[aspect]} overflow-hidden bg-ivory-dark warm-card`}>
         <Image
           src={src}
           alt={alt}
@@ -144,7 +144,7 @@ const trustItems = [
     line: "Sourced by hand, shipped from Palampur. No middlemen.",
   },
   {
-    title: "Detailed Provenance",
+    title: "Traceable to Source",
     line: "Harvest date, estate, elevation and batch on every tin.",
   },
 ];
