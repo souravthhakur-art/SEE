@@ -118,50 +118,69 @@ function getMediaListOrderBy(sort: MediaSortOption): Prisma.MediaOrderByWithRela
 }
 
 export async function getMediaList(params: MediaListParams): Promise<MediaListResult> {
-  const where = buildMediaListWhere(params)
-  const skip = (params.page - 1) * MEDIA_PAGE_SIZE
+  try {
+    const where = buildMediaListWhere(params)
+    const skip = (params.page - 1) * MEDIA_PAGE_SIZE
 
-  const [totalCount, media] = await prisma.$transaction([
-    prisma.media.count({ where }),
-    prisma.media.findMany({
-      where,
-      skip,
-      take: MEDIA_PAGE_SIZE,
-      orderBy: getMediaListOrderBy(params.sort),
-      include: {
-        _count: { select: { productMedia: true } },
-      },
-    }),
-  ])
+    const [totalCount, media] = await prisma.$transaction([
+      prisma.media.count({ where }),
+      prisma.media.findMany({
+        where,
+        skip,
+        take: MEDIA_PAGE_SIZE,
+        orderBy: getMediaListOrderBy(params.sort),
+        include: {
+          _count: { select: { productMedia: true } },
+        },
+      }),
+    ])
 
-  return {
-    media,
-    totalCount,
-    totalPages: Math.max(1, Math.ceil(totalCount / MEDIA_PAGE_SIZE)),
+    return {
+      media,
+      totalCount,
+      totalPages: Math.max(1, Math.ceil(totalCount / MEDIA_PAGE_SIZE)),
+    }
+  } catch (error) {
+    console.error("Failed to fetch media list from DB, using fallback:", error)
+    return {
+      media: [],
+      totalCount: 0,
+      totalPages: 1,
+    }
   }
 }
 
 export async function getMediaById(mediaId: string): Promise<MediaDetail | null> {
-  return prisma.media.findUnique({
-    where: { id: mediaId },
-    include: {
-      productMedia: {
-        orderBy: [{ role: "asc" }, { displayOrder: "asc" }],
-        include: {
-          product: {
-            select: { id: true, name: true, slug: true, status: true },
+  try {
+    return await prisma.media.findUnique({
+      where: { id: mediaId },
+      include: {
+        productMedia: {
+          orderBy: [{ role: "asc" }, { displayOrder: "asc" }],
+          include: {
+            product: {
+              select: { id: true, name: true, slug: true, status: true },
+            },
           },
         },
       },
-    },
-  })
+    })
+  } catch (error) {
+    console.error(`Failed to fetch media with ID ${mediaId} from DB, using fallback:`, error)
+    return null
+  }
 }
 
 export async function getMediaLibraryOptions(): Promise<ProductMediaOption[]> {
-  return prisma.media.findMany({
-    orderBy: [{ createdAt: "desc" }],
-    select: { id: true, url: true, altText: true, caption: true },
-  })
+  try {
+    return await prisma.media.findMany({
+      orderBy: [{ createdAt: "desc" }],
+      select: { id: true, url: true, altText: true, caption: true },
+    })
+  } catch (error) {
+    console.error("Failed to fetch media library options from DB, using fallback:", error)
+    return []
+  }
 }
 
 export function buildMediaListQueryString(

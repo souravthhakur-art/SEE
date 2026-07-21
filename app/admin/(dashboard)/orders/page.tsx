@@ -39,21 +39,30 @@ export default async function AdminOrdersPage({ searchParams }: AdminOrdersPageP
   }
 
   // Run high-speed concurrent db lookups for orders list and count
-  const [dbOrders, totalCount] = await Promise.all([
-    prisma.order.findMany({
-      where,
-      include: {
-        items: true,
-        history: {
-          orderBy: { createdAt: "desc" },
+  let dbOrders: any[] = [];
+  let totalCount = 0;
+
+  try {
+    const [fetchedOrders, fetchedCount] = await Promise.all([
+      prisma.order.findMany({
+        where,
+        include: {
+          items: true,
+          history: {
+            orderBy: { createdAt: "desc" },
+          },
         },
-      },
-      orderBy: { createdAt: "desc" },
-      skip,
-      take: limit,
-    }),
-    prisma.order.count({ where }),
-  ]);
+        orderBy: { createdAt: "desc" },
+        skip,
+        take: limit,
+      }),
+      prisma.order.count({ where }),
+    ]);
+    dbOrders = fetchedOrders;
+    totalCount = fetchedCount;
+  } catch (error) {
+    console.error("Failed to fetch orders from database, using fallback:", error);
+  }
 
   return (
     <div className="space-y-6" id="admin-orders-page">

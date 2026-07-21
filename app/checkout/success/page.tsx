@@ -8,6 +8,8 @@ export const metadata = {
   description: "Your mountain harvest order has been logged successfully.",
 }
 
+export const dynamic = "force-dynamic";
+
 // Client helper for WhatsApp prefilled message
 function buildWhatsAppConfirmLink(orderNumber: string, grandTotal: number) {
   const message = `Hi! I've placed an order on Palum Dhara.\n\nOrder Number: ${orderNumber}\nTotal: ₹${grandTotal}\n\nPlease confirm availability and dispatch schedule. Thank you!`;

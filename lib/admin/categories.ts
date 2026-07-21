@@ -153,35 +153,44 @@ function getCategoryListOrderBy(sort: CategorySortOption): Prisma.CategoryOrderB
 }
 
 export async function getCategoryList(params: CategoryListParams): Promise<CategoryListResult> {
-  const where = buildCategoryListWhere(params)
-  const skip = (params.page - 1) * CATEGORY_PAGE_SIZE
+  try {
+    const where = buildCategoryListWhere(params)
+    const skip = (params.page - 1) * CATEGORY_PAGE_SIZE
 
-  const [totalCount, categories] = await prisma.$transaction([
-    prisma.category.count({ where }),
-    prisma.category.findMany({
-      where,
-      skip,
-      take: CATEGORY_PAGE_SIZE,
-      orderBy: getCategoryListOrderBy(params.sort),
-      select: {
-        id: true,
-        name: true,
-        slug: true,
-        description: true,
-        featured: true,
-        active: true,
-        displayOrder: true,
-        updatedAt: true,
-        parent: { select: { id: true, name: true } },
-        _count: { select: { products: true, children: true } },
-      },
-    }),
-  ])
+    const [totalCount, categories] = await prisma.$transaction([
+      prisma.category.count({ where }),
+      prisma.category.findMany({
+        where,
+        skip,
+        take: CATEGORY_PAGE_SIZE,
+        orderBy: getCategoryListOrderBy(params.sort),
+        select: {
+          id: true,
+          name: true,
+          slug: true,
+          description: true,
+          featured: true,
+          active: true,
+          displayOrder: true,
+          updatedAt: true,
+          parent: { select: { id: true, name: true } },
+          _count: { select: { products: true, children: true } },
+        },
+      }),
+    ])
 
-  return {
-    categories,
-    totalCount,
-    totalPages: Math.max(1, Math.ceil(totalCount / CATEGORY_PAGE_SIZE)),
+    return {
+      categories,
+      totalCount,
+      totalPages: Math.max(1, Math.ceil(totalCount / CATEGORY_PAGE_SIZE)),
+    }
+  } catch (error) {
+    console.error("Failed to fetch category list from DB, using fallback:", error)
+    return {
+      categories: [],
+      totalCount: 0,
+      totalPages: 1,
+    }
   }
 }
 
@@ -192,66 +201,80 @@ async function getDescendantCategoryIds(categoryId: string): Promise<Set<string>
   const descendants = new Set<string>()
   let frontier = [categoryId]
 
-  while (frontier.length > 0) {
-    const children = await prisma.category.findMany({
-      where: { parentId: { in: frontier } },
-      select: { id: true },
-    })
+  try {
+    while (frontier.length > 0) {
+      const children = await prisma.category.findMany({
+        where: { parentId: { in: frontier } },
+        select: { id: true },
+      })
 
-    frontier = []
-    for (const child of children) {
-      if (!descendants.has(child.id)) {
-        descendants.add(child.id)
-        frontier.push(child.id)
+      frontier = []
+      for (const child of children) {
+        if (!descendants.has(child.id)) {
+          descendants.add(child.id)
+          frontier.push(child.id)
+        }
       }
     }
+  } catch (error) {
+    console.error(`Failed to get descendant categories for ${categoryId}, using fallback:`, error)
   }
 
   return descendants
 }
 
 export async function getCategoryFormOptions(currentCategoryId?: string): Promise<CategoryFormOptions> {
-  const categories = await prisma.category.findMany({
-    orderBy: [{ displayOrder: "asc" }, { name: "asc" }],
-    select: { id: true, name: true, slug: true },
-  })
+  try {
+    const categories = await prisma.category.findMany({
+      orderBy: [{ displayOrder: "asc" }, { name: "asc" }],
+      select: { id: true, name: true, slug: true },
+    })
 
-  if (!currentCategoryId) {
-    return { parentOptions: categories }
-  }
+    if (!currentCategoryId) {
+      return { parentOptions: categories }
+    }
 
-  const descendantIds = await getDescendantCategoryIds(currentCategoryId)
+    const descendantIds = await getDescendantCategoryIds(currentCategoryId)
 
-  return {
-    parentOptions: categories.filter((category) => category.id !== currentCategoryId && !descendantIds.has(category.id)),
+    return {
+      parentOptions: categories.filter((category) => category.id !== currentCategoryId && !descendantIds.has(category.id)),
+    }
+  } catch (error) {
+    console.error("Failed to get category form options, using fallback:", error)
+    return { parentOptions: [] }
   }
 }
 
 export async function getCategoryById(categoryId: string): Promise<CategoryDetail | null> {
-  return prisma.category.findUnique({
-    where: { id: categoryId },
-    select: {
-      id: true,
-      name: true,
-      slug: true,
-      description: true,
-      parentId: true,
-      featured: true,
-      active: true,
-      displayOrder: true,
-      image: true,
-      seoTitle: true,
-      seoDescription: true,
-      createdAt: true,
-      updatedAt: true,
-      parent: { select: { id: true, name: true, slug: true } },
-      children: {
-        orderBy: [{ displayOrder: "asc" }, { name: "asc" }],
-        select: { id: true, name: true, slug: true, active: true },
+  try {
+    return await prisma.category.findUnique({
+      where: { id: categoryId },
+      select: {
+        id: true,
+        name: true,
+        slug: true,
+        description: true,
+        parentId: true,
+        featured: true,
+        active: true,
+        displayOrder: true,
+        image: true,
+        seoTitle: true,
+        seoDescription: true,
+        createdAt: true,
+        updatedAt: true,
+        parent: { select: { id: true, name: true, slug: true } },
+        children: {
+          orderBy: [{ displayOrder: "asc" }, { name: "asc" }],
+          select: { id: true, name: true, slug: true, active: true },
+        },
+        _count: { select: { products: true } },
       },
-      _count: { select: { products: true } },
-    },
-  })
+    })
+  } catch (error) {
+    console.error(`Failed to fetch category with ID ${categoryId} from DB, using fallback:`, error)
+    return null
+  }
 }
 
 export function mapCategoryToFormValues(category: CategoryDetail): CategoryFormValues {

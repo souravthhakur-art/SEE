@@ -2,13 +2,23 @@
 
 import { useEffect, useRef, useState } from "react"
 import { ChevronDown } from "lucide-react"
-import { useSession } from "@/lib/auth-client"
+import { authClient } from "@/lib/auth-client"
 import { AdminLogoutButton } from "@/components/admin/AdminLogoutButton"
 
 export function AdminUserMenu() {
-  const { data: session } = useSession()
+  const [session, setSession] = useState<any>(null)
   const [isOpen, setIsOpen] = useState(false)
   const menuRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    authClient.getSession().then((res) => {
+      if (res && res.data) {
+        setSession(res.data)
+      }
+    }).catch(err => {
+      console.error("Failed to fetch admin session:", err)
+    })
+  }, [])
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
@@ -21,8 +31,8 @@ export function AdminUserMenu() {
     return () => document.removeEventListener("mousedown", handleClickOutside)
   }, [])
 
-  const name = session?.user.name ?? "Admin"
-  const email = session?.user.email ?? ""
+  const name = session?.user?.name ?? "Admin"
+  const email = session?.user?.email ?? ""
   const initial = name.charAt(0).toUpperCase()
 
   return (

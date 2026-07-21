@@ -19,31 +19,26 @@ export default function HomePage() {
   return (
     <>
       {/* HERO */}
-      <section className="relative min-h-[66svh] md:min-h-[72vh] flex items-center overflow-hidden">
+      <section className="relative min-h-[86svh] md:min-h-[88vh] flex items-center overflow-hidden">
         {/* Background — Kangra Valley tea gardens, cropped toward the
             terraces (not the snow peak) and colour-graded warmer and less
             saturated so it reads as food provenance, not a travel poster. */}
         <div className="absolute inset-0 overflow-hidden">
           <Image
-            src="/images/hero-illustration.jpg"
-            alt="Artistic hand-painted illustration of Kangra tea gardens and Himalayan honey harvesting"
+            src="/images/hero-kangra-valley.jpg"
+            alt="Misty tea gardens of Kangra Valley at dawn with the Dhauladhar range"
             fill
-            className="object-cover object-center hero-zoom brightness-[0.85] contrast-[1.02] saturate-[0.95]"
+            className="object-cover object-[center_64%] saturate-[0.82] sepia-[0.06] contrast-[1.04] brightness-[0.96] hero-zoom"
             sizes="100vw"
             priority
-            referrerPolicy="no-referrer"
           />
         </div>
-        {/* Colour grade — premium subtle dark wash to keep the hand-painted illustration
-            colors vivid while ensuring absolute legibility of the white text. */}
-        <div className="absolute inset-0 bg-gradient-to-b from-black/35 via-black/45 to-black/65 z-[1]" />
-        <div className="absolute inset-0 opacity-15 bg-[radial-gradient(ellipse_at_78%_18%,_rgba(214,168,92,0.25),_transparent_55%)] z-[1]" />
-        <div 
-          className="absolute inset-0 z-[2]" 
-          style={{
-            background: "linear-gradient(to bottom, rgba(0, 0, 0, 0.25) 0%, transparent 20%)"
-          }}
-        />
+        {/* Colour grade — warmer and lighter than a flat dark wash; legibility
+            is concentrated bottom-left where the copy sits, and the tea
+            terraces stay readable through the mid-ground. */}
+        <div className="absolute inset-0 bg-[linear-gradient(120deg,_rgba(12,28,20,0.85)_0%,_rgba(18,38,27,0.66)_36%,_rgba(32,50,37,0.34)_62%,_rgba(58,50,36,0.20)_100%)]" />
+        <div className="absolute inset-0 opacity-25 bg-[radial-gradient(ellipse_at_78%_18%,_rgba(214,168,92,0.30),_transparent_55%)]" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/8 to-transparent" />
 
         {/* Fine paper-grain texture — a restrained, tactile finish in place
             of a flat colour filter. Pure CSS/SVG, no new asset. */}
@@ -80,49 +75,40 @@ export default function HomePage() {
           />
         </div>
 
-        <div className="relative z-10 section-padding w-full py-16 md:py-24 flex items-center justify-center max-w-7xl mx-auto">
-          <div className="max-w-2xl text-center flex flex-col items-center justify-center">
-            <p className="text-[10px] md:text-xs uppercase tracking-[0.25em] text-ivory/90 mb-4 font-body font-semibold drop-shadow-[0_1px_2px_rgba(0,0,0,0.3)]">
-              Bring the Himalayas to Your Home.
-            </p>
-            <h1 className="font-heading text-[32px] sm:text-4xl md:text-6xl lg:text-7xl text-ivory mb-6 leading-[1.15] md:leading-[1.12] tracking-tight text-balance font-medium drop-shadow-[0_2px_10px_rgba(0,0,0,0.4)]">
-              Authentic Flavours of the Himalayas.
+        <div className="relative z-10 section-padding w-full pt-28 pb-20 md:pt-32 md:pb-24">
+          <div className="max-w-3xl">
+            {/*
+              Est. 2026 · Palampur, Himachal Pradesh
+            */}
+            <h1 className="font-heading text-5xl md:text-7xl lg:text-8xl text-ivory mb-5 leading-[1.05] text-balance">
+              Bringing Himachal Pradesh<br />to Your Home.
             </h1>
-            <p className="text-xs sm:text-sm md:text-base text-stone-200/95 max-w-lg mx-auto mb-10 leading-relaxed tracking-wide font-body font-light drop-shadow-[0_1.5px_4px_rgba(0,0,0,0.35)]">
-              Tea, honey and pantry essentials sourced directly from trusted farmers and producers across Himachal Pradesh.
+            <p className="text-lg md:text-xl text-ivory/90 max-w-2xl mb-3 leading-relaxed text-balance">
+              Exceptional tea, honey, preserves and pantry staples from the Himalayan foothills.
             </p>
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-3.5 sm:gap-5 w-full sm:w-auto max-w-xs sm:max-w-none mx-auto">
-              <Link 
-                href="/shop" 
-                className="btn-primary w-full sm:w-auto min-w-[190px] px-7 py-4 md:py-3.5 text-xs tracking-[0.2em] font-body font-semibold uppercase text-center shadow-[0_4px_20px_rgba(0,0,0,0.25)] hover:shadow-[0_4px_25px_rgba(212,168,75,0.15)]"
-              >
-                SHOP COLLECTION
-                <ArrowRight className="w-3.5 h-3.5 ml-1.5" strokeWidth={1.5} />
+            {/*
+              Every tin and jar is traceable to its source — harvest date, estate, elevation, and batch — so you always know exactly where your food comes from.
+            */}
+            <p className="text-sm md:text-base text-ivory/70 max-w-xl mb-8 leading-relaxed">
+              Sourced directly from trusted growers and women-led groups, with every batch traceable to its origin.
+            </p>
+            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
+              <Link href="/shop" className="btn-primary w-full sm:w-auto">
+                Shop Now
+                <ArrowRight className="w-4 h-4 ml-2" strokeWidth={1.5} />
               </Link>
               <Link
                 href="/subscriptions"
-                className="inline-flex items-center justify-center w-full sm:w-auto min-w-[190px] px-7 py-4 md:py-3.5 bg-ivory/5 hover:bg-ivory/10 backdrop-blur-[2px] border border-stone-300/25 hover:border-ivory/40 text-stone-300/90 hover:text-ivory font-body text-xs tracking-[0.2em] font-medium uppercase transition-all duration-300 text-center shadow-[0_4px_12px_rgba(0,0,0,0.25)] hover:shadow-[0_4px_20px_rgba(212,168,75,0.08)] rounded-sm"
+                className="inline-flex items-center justify-center px-8 py-4 border border-ivory/55 text-ivory font-body text-sm tracking-widest uppercase transition-all duration-300 hover:border-ivory hover:bg-ivory/10 w-full sm:w-auto"
               >
-                SUBSCRIBE NOW
+                Subscriptions
               </Link>
             </div>
-            <ul className="mt-10 flex max-w-2xl flex-wrap justify-center items-center gap-x-6 gap-y-3 text-[10px] md:text-xs tracking-[0.18em] uppercase text-ivory font-medium font-body drop-shadow-[0_1px_3px_rgba(0,0,0,0.4)]" aria-label="Palum Dhara commitments">
-              <li className="flex items-center gap-2">
-                <span className="w-1 h-1 rounded-full bg-gold-light/90" />
-                Direct from Himachal Pradesh
-              </li>
-              <li className="flex items-center gap-2">
-                <span className="w-1 h-1 rounded-full bg-gold-light/90" />
-                Small Batch
-              </li>
-              <li className="flex items-center gap-2">
-                <span className="w-1 h-1 rounded-full bg-gold-light/90" />
-                Traceable Origins
-              </li>
-              <li className="flex items-center gap-2">
-                <span className="w-1 h-1 rounded-full bg-gold-light/90" />
-                Women-led SHGs
-              </li>
+            <ul className="mt-8 flex max-w-2xl flex-wrap gap-x-5 gap-y-2 text-[10px] md:text-[11px] tracking-[0.12em] uppercase text-ivory/75" aria-label="Palum Dhara commitments">
+              <li>Direct from Himachal Pradesh</li>
+              <li>Small Batch</li>
+              <li>Traceable Origins</li>
+              <li>Women-led SHGs</li>
             </ul>
           </div>
         </div>

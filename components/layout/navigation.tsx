@@ -5,8 +5,7 @@ import { usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
 import { Menu, X, ChevronDown, User } from "lucide-react";
 import CartDrawer from "@/components/layout/cart-drawer";
-import Logo from "@/components/layout/logo";
-import { useSession, authClient } from "@/lib/auth-client";
+import { authClient } from "@/lib/auth-client";
 
 const navLinks = [
   { href: "/shop", label: "Shop", primary: true },
@@ -21,7 +20,17 @@ export default function Navigation() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const pathname = usePathname();
   const router = useRouter();
-  const { data: session } = useSession();
+  const [session, setSession] = useState<any>(null);
+
+  useEffect(() => {
+    authClient.getSession().then((res) => {
+      if (res && res.data) {
+        setSession(res.data);
+      }
+    }).catch((err) => {
+      console.error("Failed to fetch session in navigation:", err);
+    });
+  }, []);
 
   const isHome = pathname === "/";
   // Only the home page has a full-bleed dark hero, so only there can the
@@ -52,24 +61,34 @@ export default function Navigation() {
         <div className="section-padding">
           <div className="flex items-center justify-between h-16 md:h-[4.5rem]">
             {/* Logo */}
-            <Link href="/" className="flex items-center gap-2 group" aria-label="Palum Dhara Home">
-              <Logo floating={floating} className={scrolled ? "h-8 md:h-9.5" : "h-10 md:h-11.5"} />
+            <Link href="/" className="flex items-center gap-2">
+              <span
+                className={`font-heading text-2xl md:text-3xl tracking-tight transition-colors duration-500 ${
+                  floating ? "text-ivory" : "text-forest"
+                }`}
+              >
+                Palum Dhara
+              </span>
             </Link>
 
             {/* Desktop Nav */}
-            <nav className="hidden md:flex items-center gap-8 lg:gap-11">
+            <nav className="hidden md:flex items-center gap-7 lg:gap-9">
               {navLinks.map((link) => (
                 <Link
                   key={link.href}
                   href={link.href}
-                  className={`relative py-1 text-[11px] tracking-[0.22em] font-semibold font-body uppercase transition-all duration-300 after:absolute after:bottom-0 after:left-0 after:h-px after:w-full after:origin-left after:scale-x-0 after:transition-transform after:duration-300 hover:after:scale-x-100 ${
+                  className={`relative py-2 text-[11px] tracking-[0.14em] uppercase transition-colors duration-300 after:absolute after:bottom-0 after:left-0 after:h-px after:w-full after:origin-left after:scale-x-0 after:transition-transform after:duration-300 hover:after:scale-x-100 ${
                     pathname === link.href
                       ? floating
-                        ? "text-ivory font-bold after:scale-x-100 after:bg-gold-light"
-                        : "text-forest font-bold after:scale-x-100 after:bg-gold"
+                        ? "text-ivory after:scale-x-100 after:bg-gold-light"
+                        : "text-forest after:scale-x-100 after:bg-gold"
                       : floating
-                        ? "text-ivory/80 hover:text-ivory after:bg-gold-light"
-                        : "text-stone-900 hover:text-forest after:bg-gold"
+                      ? link.primary
+                        ? "text-ivory after:bg-gold-light"
+                        : "text-ivory/75 hover:text-ivory after:bg-ivory"
+                      : link.primary
+                        ? "text-forest after:bg-gold"
+                        : "text-charcoal/65 hover:text-forest after:bg-forest"
                   }`}
                 >
                   {link.label}
@@ -88,7 +107,7 @@ export default function Navigation() {
                   <button
                     onClick={() => setIsDropdownOpen(!isDropdownOpen)}
                     className={`relative p-2 transition-colors duration-300 cursor-pointer flex items-center gap-0.5 ${
-                      floating ? "text-ivory/85 hover:text-ivory" : "text-stone-900 hover:text-forest"
+                      floating ? "text-ivory hover:text-ivory/70" : "text-forest hover:text-forest-light"
                     }`}
                     id="nav-account-dropdown-trigger"
                     aria-label="Account Menu"
@@ -142,8 +161,8 @@ export default function Navigation() {
               ) : (
                 <Link
                   href="/sign-in"
-                  className={`relative p-3 md:p-2 transition-colors duration-300 ${
-                    floating ? "text-ivory/85 hover:text-ivory" : "text-stone-900 hover:text-forest"
+                  className={`relative p-2 transition-colors duration-300 ${
+                    floating ? "text-ivory hover:text-ivory/70" : "text-forest hover:text-forest-light"
                   }`}
                   id="nav-link-sign-in"
                   aria-label="Account"
@@ -157,9 +176,7 @@ export default function Navigation() {
               {/* Mobile menu button */}
               <button
                 onClick={() => setIsOpen(!isOpen)}
-                className={`md:hidden p-3 transition-colors duration-300 ${
-                  floating ? "text-ivory/85 hover:text-ivory" : "text-stone-900 hover:text-forest"
-                }`}
+                className={`md:hidden p-2 ${floating ? "text-ivory" : "text-forest"}`}
                 aria-label="Toggle menu"
               >
                 {isOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
@@ -177,7 +194,7 @@ export default function Navigation() {
                   key={link.href}
                   href={link.href}
                   onClick={() => setIsOpen(false)}
-                  className={`text-sm tracking-[0.15em] uppercase transition-colors duration-300 py-4 border-b border-forest/10 last:border-0 ${
+                  className={`text-sm tracking-[0.15em] uppercase transition-colors duration-300 py-3 border-b border-forest/10 last:border-0 ${
                     link.primary ? "text-forest" : "text-charcoal/70 hover:text-forest"
                   }`}
                 >
@@ -194,7 +211,7 @@ export default function Navigation() {
                   <Link
                     href="/account"
                     onClick={() => setIsOpen(false)}
-                    className="text-sm tracking-[0.15em] uppercase transition-colors duration-300 py-4 border-b border-forest/10 text-forest font-semibold"
+                    className="text-sm tracking-[0.15em] uppercase transition-colors duration-300 py-3 border-b border-forest/10 text-forest font-semibold"
                     id="mobile-nav-link-my-account"
                   >
                     My Account
@@ -202,7 +219,7 @@ export default function Navigation() {
                   <Link
                     href="/account?tab=addresses"
                     onClick={() => setIsOpen(false)}
-                    className="text-sm tracking-[0.15em] uppercase transition-colors duration-300 py-4 border-b border-forest/10 text-charcoal/70 hover:text-forest"
+                    className="text-sm tracking-[0.15em] uppercase transition-colors duration-300 py-3 border-b border-forest/10 text-charcoal/70 hover:text-forest"
                     id="mobile-nav-link-addresses"
                   >
                     Addresses
@@ -210,7 +227,7 @@ export default function Navigation() {
                   <Link
                     href="/account?tab=newsletter"
                     onClick={() => setIsOpen(false)}
-                    className="text-sm tracking-[0.15em] uppercase transition-colors duration-300 py-4 border-b border-forest/10 text-charcoal/70 hover:text-forest"
+                    className="text-sm tracking-[0.15em] uppercase transition-colors duration-300 py-3 border-b border-forest/10 text-charcoal/70 hover:text-forest"
                     id="mobile-nav-link-preferences"
                   >
                     Preferences
@@ -222,7 +239,7 @@ export default function Navigation() {
                       router.push("/sign-in");
                       router.refresh();
                     }}
-                    className="text-left text-sm tracking-[0.15em] uppercase transition-colors duration-300 py-4 text-terracotta hover:text-terracotta/80 cursor-pointer"
+                    className="text-left text-sm tracking-[0.15em] uppercase transition-colors duration-300 py-3 text-terracotta hover:text-terracotta/80 cursor-pointer"
                     id="mobile-nav-btn-logout"
                   >
                     Logout
@@ -232,7 +249,7 @@ export default function Navigation() {
                 <Link
                   href="/sign-in"
                   onClick={() => setIsOpen(false)}
-                  className="text-sm tracking-[0.15em] uppercase transition-colors duration-300 py-4 border-t border-forest/10 mt-2 text-forest font-semibold flex items-center gap-2"
+                  className="text-sm tracking-[0.15em] uppercase transition-colors duration-300 py-3 border-t border-forest/10 mt-2 text-forest font-semibold flex items-center gap-2"
                   id="mobile-nav-link-sign-in"
                 >
                   <User className="w-4 h-4 text-forest" />
@@ -246,7 +263,7 @@ export default function Navigation() {
 
       {/* Spacer so page content clears the fixed header. The home page's
           full-bleed hero fills this space itself, so it opts out. */}
-      {!isHome && <div className="h-[72px] md:h-[86px]" aria-hidden="true" />}
+      {!isHome && <div className="h-16 md:h-[4.5rem]" aria-hidden="true" />}
     </>
   );
 }

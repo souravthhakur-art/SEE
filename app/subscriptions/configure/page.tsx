@@ -4,9 +4,9 @@ import { useState, useEffect, Suspense } from "react"
 import { useSearchParams, useRouter } from "next/navigation"
 import Link from "next/link"
 import Image from "next/image"
-import { useSession } from "@/lib/auth-client"
+import { authClient } from "@/lib/auth-client"
 import { subscriptionBoxes, products } from "@/lib/data"
-import { motion, AnimatePresence } from "motion/react"
+import { motion, AnimatePresence } from "framer-motion"
 import { 
   ArrowLeft, 
   ArrowRight, 
@@ -56,7 +56,23 @@ const DEFAULT_PLAN_ITEMS: Record<string, { productId: string; quantity: number }
 function ConfigureSubscriptionContent() {
   const router = useRouter()
   const searchParams = useSearchParams()
-  const { data: session, isPending: isSessionLoading } = useSession()
+  const [session, setSession] = useState<any>(null)
+  const [isSessionLoading, setIsSessionLoading] = useState(true)
+
+  useEffect(() => {
+    authClient.getSession()
+      .then((res) => {
+        if (res && res.data) {
+          setSession(res.data)
+        }
+      })
+      .catch((err) => {
+        console.error("Failed to fetch session:", err)
+      })
+      .finally(() => {
+        setIsSessionLoading(false)
+      })
+  }, [])
   
   const planId = searchParams.get("plan") || "family"
   const activePlan = subscriptionBoxes.find(b => b.id === planId) || subscriptionBoxes[1] // fallback to family

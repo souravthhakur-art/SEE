@@ -9,6 +9,8 @@ export const metadata: Metadata = {
   description: "Review your order and place it via WhatsApp — Cash on Delivery available.",
 };
 
+export const dynamic = "force-dynamic";
+
 export default async function CheckoutPage() {
   const session = await getCurrentSession();
   

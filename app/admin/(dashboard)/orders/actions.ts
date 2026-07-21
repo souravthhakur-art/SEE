@@ -9,14 +9,7 @@ export async function updateOrderStatus(orderId: string, status: string, notes?:
     return { success: false, error: "Missing required parameters." }
   }
 
-  let dbStatus = status
-  if (status === "ready_to_dispatch") {
-    dbStatus = "packed"
-  } else if (status === "dispatched") {
-    dbStatus = "shipped"
-  }
-
-  const orderStatus = dbStatus as OrderStatus
+  const orderStatus = status as OrderStatus
 
   try {
     await prisma.$transaction(async (tx) => {

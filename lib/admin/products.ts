@@ -225,16 +225,117 @@ function getProductListOrderBy(sort: ProductSortOption): Prisma.ProductOrderByWi
 }
 
 export async function getProductList(params: ProductListParams): Promise<ProductListResult> {
-  const where = buildProductListWhere(params)
-  const skip = (params.page - 1) * PRODUCT_PAGE_SIZE
+  try {
+    const where = buildProductListWhere(params)
+    const skip = (params.page - 1) * PRODUCT_PAGE_SIZE
 
-  const [totalCount, products] = await prisma.$transaction([
-    prisma.product.count({ where }),
-    prisma.product.findMany({
-      where,
-      skip,
-      take: PRODUCT_PAGE_SIZE,
-      orderBy: getProductListOrderBy(params.sort),
+    const [totalCount, products] = await prisma.$transaction([
+      prisma.product.count({ where }),
+      prisma.product.findMany({
+        where,
+        skip,
+        take: PRODUCT_PAGE_SIZE,
+        orderBy: getProductListOrderBy(params.sort),
+        include: {
+          category: {
+            select: {
+              id: true,
+              name: true,
+              slug: true,
+            },
+          },
+          source: {
+            select: {
+              producerName: true,
+              district: true,
+              state: true,
+            },
+          },
+          media: {
+            // 'featured' sorts before 'gallery' — enum declared in that order
+            orderBy: [{ role: "asc" }, { displayOrder: "asc" }],
+            take: 1,
+            include: { media: { select: { url: true, altText: true } } },
+          },
+        },
+      }),
+    ])
+
+    return {
+      products: products.map((product) => ({
+        ...product,
+        images: product.media.map((pm) => ({
+          url: pm.media.url,
+          altText: pm.media.altText,
+          isPrimary: pm.role === "featured",
+        })),
+      })),
+      totalCount,
+      totalPages: Math.max(1, Math.ceil(totalCount / PRODUCT_PAGE_SIZE)),
+    }
+  } catch (error) {
+    console.error("Failed to fetch product list from DB, using fallback:", error)
+    return {
+      products: [],
+      totalCount: 0,
+      totalPages: 1,
+    }
+  }
+}
+
+export async function getProductFormOptions(currentProductId?: string): Promise<ProductFormOptions> {
+  try {
+    const [categories, relatedProducts, collections, mediaOptions] = await Promise.all([
+      prisma.category.findMany({
+        orderBy: [{ displayOrder: "asc" }, { name: "asc" }],
+        select: {
+          id: true,
+          name: true,
+          slug: true,
+        },
+      }),
+      prisma.product.findMany({
+        where: currentProductId ? { id: { not: currentProductId } } : undefined,
+        orderBy: [{ name: "asc" }],
+        select: {
+          id: true,
+          name: true,
+          sku: true,
+          status: true,
+        },
+      }),
+      prisma.collection.findMany({
+        orderBy: [{ displayOrder: "asc" }, { name: "asc" }],
+        select: {
+          id: true,
+          name: true,
+          slug: true,
+        },
+      }),
+      getMediaLibraryOptions(),
+    ])
+
+    return {
+      categories,
+      relatedProducts,
+      collections,
+      mediaOptions,
+    }
+  } catch (error) {
+    console.error("Failed to fetch product form options from DB, using fallback:", error)
+    return {
+      categories: [],
+      relatedProducts: [],
+      collections: [],
+      mediaOptions: [],
+    }
+  }
+}
+
+export async function getProductById(productId: string): Promise<ProductDetail | null> {
+  try {
+    const product = await prisma.product.findUnique({
+      where: { id: productId },
       include: {
         category: {
           select: {
@@ -245,143 +346,66 @@ export async function getProductList(params: ProductListParams): Promise<Product
         },
         source: {
           select: {
-            producerName: true,
+            village: true,
             district: true,
             state: true,
+            producerName: true,
+            producerType: true,
+            craftMethod: true,
           },
         },
         media: {
-          // 'featured' sorts before 'gallery' — enum declared in that order
           orderBy: [{ role: "asc" }, { displayOrder: "asc" }],
-          take: 1,
-          include: { media: { select: { url: true, altText: true } } },
+          include: { media: true },
+        },
+        relatedProducts: {
+          orderBy: [{ displayOrder: "asc" }, { createdAt: "asc" }],
+          include: {
+            relatedProduct: {
+              select: {
+                id: true,
+                name: true,
+                sku: true,
+                status: true,
+                slug: true,
+              },
+            },
+          },
+        },
+        collections: {
+          orderBy: [{ displayOrder: "asc" }, { createdAt: "asc" }],
+          include: {
+            collection: {
+              select: {
+                id: true,
+                name: true,
+                slug: true,
+              },
+            },
+          },
         },
       },
-    }),
-  ])
+    })
 
-  return {
-    products: products.map((product) => ({
+    if (!product) {
+      return null
+    }
+
+    return {
       ...product,
       images: product.media.map((pm) => ({
+        id: pm.id,
+        mediaId: pm.mediaId,
         url: pm.media.url,
         altText: pm.media.altText,
+        caption: pm.media.caption,
         isPrimary: pm.role === "featured",
+        displayOrder: pm.displayOrder,
       })),
-    })),
-    totalCount,
-    totalPages: Math.max(1, Math.ceil(totalCount / PRODUCT_PAGE_SIZE)),
-  }
-}
-
-export async function getProductFormOptions(currentProductId?: string): Promise<ProductFormOptions> {
-  const [categories, relatedProducts, collections, mediaOptions] = await Promise.all([
-    prisma.category.findMany({
-      orderBy: [{ displayOrder: "asc" }, { name: "asc" }],
-      select: {
-        id: true,
-        name: true,
-        slug: true,
-      },
-    }),
-    prisma.product.findMany({
-      where: currentProductId ? { id: { not: currentProductId } } : undefined,
-      orderBy: [{ name: "asc" }],
-      select: {
-        id: true,
-        name: true,
-        sku: true,
-        status: true,
-      },
-    }),
-    prisma.collection.findMany({
-      orderBy: [{ displayOrder: "asc" }, { name: "asc" }],
-      select: {
-        id: true,
-        name: true,
-        slug: true,
-      },
-    }),
-    getMediaLibraryOptions(),
-  ])
-
-  return {
-    categories,
-    relatedProducts,
-    collections,
-    mediaOptions,
-  }
-}
-
-export async function getProductById(productId: string): Promise<ProductDetail | null> {
-  const product = await prisma.product.findUnique({
-    where: { id: productId },
-    include: {
-      category: {
-        select: {
-          id: true,
-          name: true,
-          slug: true,
-        },
-      },
-      source: {
-        select: {
-          village: true,
-          district: true,
-          state: true,
-          producerName: true,
-          producerType: true,
-          craftMethod: true,
-        },
-      },
-      media: {
-        orderBy: [{ role: "asc" }, { displayOrder: "asc" }],
-        include: { media: true },
-      },
-      relatedProducts: {
-        orderBy: [{ displayOrder: "asc" }, { createdAt: "asc" }],
-        include: {
-          relatedProduct: {
-            select: {
-              id: true,
-              name: true,
-              sku: true,
-              status: true,
-              slug: true,
-            },
-          },
-        },
-      },
-      collections: {
-        orderBy: [{ displayOrder: "asc" }, { createdAt: "asc" }],
-        include: {
-          collection: {
-            select: {
-              id: true,
-              name: true,
-              slug: true,
-            },
-          },
-        },
-      },
-    },
-  })
-
-  if (!product) {
+    }
+  } catch (error) {
+    console.error(`Failed to fetch product with ID ${productId} from DB, using fallback:`, error)
     return null
-  }
-
-  return {
-    ...product,
-    images: product.media.map((pm) => ({
-      id: pm.id,
-      mediaId: pm.mediaId,
-      url: pm.media.url,
-      altText: pm.media.altText,
-      caption: pm.media.caption,
-      isPrimary: pm.role === "featured",
-      displayOrder: pm.displayOrder,
-    })),
   }
 }
 

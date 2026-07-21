@@ -9,6 +9,8 @@ export const metadata = {
   description: "Manage your profile, shipping coordinates, newsletter subscriptions, and security settings on Palum Dhara.",
 }
 
+export const dynamic = "force-dynamic";
+
 export default async function AccountPage() {
   // Ensure the user is fully authenticated. If not, redirect to /sign-in
   const session = await requireSession("/sign-in")

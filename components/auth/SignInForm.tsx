@@ -3,7 +3,7 @@
 import { useState, type FormEvent } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
 import { authClient } from "@/lib/auth-client"
-import { motion, AnimatePresence } from "motion/react"
+import { motion, AnimatePresence } from "framer-motion"
 import * as Ornament from "@/components/ui/ornament"
 
 interface SignInFormProps {

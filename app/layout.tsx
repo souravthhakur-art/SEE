@@ -1,5 +1,8 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import Navigation from "@/components/layout/navigation";
+import Footer from "@/components/layout/footer";
+import WhatsAppFloat from "@/components/layout/whatsapp-float";
 import { SiteChrome } from "@/components/layout/SiteChrome";
 
 export const metadata: Metadata = {
@@ -43,8 +46,20 @@ export default function RootLayout({
           rel="stylesheet"
         />
       </head>
-      <body className="min-h-screen bg-ivory">
-        <SiteChrome>{children}</SiteChrome>
+      <body className="min-h-screen flex flex-col bg-ivory">
+        {/* SiteChrome renders its children on public routes and renders
+            nothing on /admin/* (see components/layout/SiteChrome.tsx).
+            {children} itself is always rendered either way — this only
+            gates the public Navigation/Footer/WhatsAppFloat, so the
+            Admin Shell isn't nested inside the marketing site's chrome. */}
+        <SiteChrome>
+          <Navigation />
+        </SiteChrome>
+        <div className="flex-1">{children}</div>
+        <SiteChrome>
+          <Footer />
+          <WhatsAppFloat />
+        </SiteChrome>
       </body>
     </html>
   );

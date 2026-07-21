@@ -144,16 +144,64 @@ function getCollectionListOrderBy(sort: CollectionSortOption): Prisma.Collection
 }
 
 export async function getCollectionList(params: CollectionListParams): Promise<CollectionListResult> {
-  const where = buildCollectionListWhere(params)
-  const skip = (params.page - 1) * COLLECTION_PAGE_SIZE
+  try {
+    const where = buildCollectionListWhere(params)
+    const skip = (params.page - 1) * COLLECTION_PAGE_SIZE
 
-  const [totalCount, collections] = await prisma.$transaction([
-    prisma.collection.count({ where }),
-    prisma.collection.findMany({
-      where,
-      skip,
-      take: COLLECTION_PAGE_SIZE,
-      orderBy: getCollectionListOrderBy(params.sort),
+    const [totalCount, collections] = await prisma.$transaction([
+      prisma.collection.count({ where }),
+      prisma.collection.findMany({
+        where,
+        skip,
+        take: COLLECTION_PAGE_SIZE,
+        orderBy: getCollectionListOrderBy(params.sort),
+        select: {
+          id: true,
+          name: true,
+          slug: true,
+          description: true,
+          featured: true,
+          active: true,
+          displayOrder: true,
+          updatedAt: true,
+          _count: { select: { products: true } },
+        },
+      }),
+    ])
+
+    return {
+      collections,
+      totalCount,
+      totalPages: Math.max(1, Math.ceil(totalCount / COLLECTION_PAGE_SIZE)),
+    }
+  } catch (error) {
+    console.error("Failed to fetch collections from DB, using fallback:", error)
+    return {
+      collections: [],
+      totalCount: 0,
+      totalPages: 1,
+    }
+  }
+}
+
+export async function getCollectionFormOptions(): Promise<CollectionFormOptions> {
+  try {
+    const products = await prisma.product.findMany({
+      orderBy: [{ name: "asc" }],
+      select: { id: true, name: true, sku: true, status: true },
+    })
+
+    return { products }
+  } catch (error) {
+    console.error("Failed to fetch collection form options, using fallback:", error)
+    return { products: [] }
+  }
+}
+
+export async function getCollectionById(collectionId: string): Promise<CollectionDetail | null> {
+  try {
+    return await prisma.collection.findUnique({
+      where: { id: collectionId },
       select: {
         id: true,
         name: true,
@@ -162,52 +210,23 @@ export async function getCollectionList(params: CollectionListParams): Promise<C
         featured: true,
         active: true,
         displayOrder: true,
+        image: true,
+        createdAt: true,
         updatedAt: true,
-        _count: { select: { products: true } },
-      },
-    }),
-  ])
-
-  return {
-    collections,
-    totalCount,
-    totalPages: Math.max(1, Math.ceil(totalCount / COLLECTION_PAGE_SIZE)),
-  }
-}
-
-export async function getCollectionFormOptions(): Promise<CollectionFormOptions> {
-  const products = await prisma.product.findMany({
-    orderBy: [{ name: "asc" }],
-    select: { id: true, name: true, sku: true, status: true },
-  })
-
-  return { products }
-}
-
-export async function getCollectionById(collectionId: string): Promise<CollectionDetail | null> {
-  return prisma.collection.findUnique({
-    where: { id: collectionId },
-    select: {
-      id: true,
-      name: true,
-      slug: true,
-      description: true,
-      featured: true,
-      active: true,
-      displayOrder: true,
-      image: true,
-      createdAt: true,
-      updatedAt: true,
-      products: {
-        orderBy: [{ displayOrder: "asc" }, { createdAt: "asc" }],
-        select: {
-          id: true,
-          displayOrder: true,
-          product: { select: { id: true, name: true, sku: true, status: true, slug: true } },
+        products: {
+          orderBy: [{ displayOrder: "asc" }, { createdAt: "asc" }],
+          select: {
+            id: true,
+            displayOrder: true,
+            product: { select: { id: true, name: true, sku: true, status: true, slug: true } },
+          },
         },
       },
-    },
-  })
+    })
+  } catch (error) {
+    console.error(`Failed to fetch collection by ID ${collectionId}, using fallback:`, error)
+    return null
+  }
 }
 
 export function mapCollectionToFormValues(collection: CollectionDetail): CollectionFormValues {
